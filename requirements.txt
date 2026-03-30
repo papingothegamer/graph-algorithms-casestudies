@@ -1,0 +1,4 @@
+# Python 3.8+ required
+# All dependencies are Python standard library only
+# tkinter is included with most Python installations
+# No pip installs needed
