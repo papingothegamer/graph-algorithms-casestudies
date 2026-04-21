@@ -1,0 +1,71 @@
+results for case study 1:
+
+plain grid (running Compare All, A* as default in dropdown):
+
+Algorithm : BFS
+Path cost : 50
+Path len  : 50 hops
+Expanded  : 888
+Time      : 2.411 ms
+Hops      : 50
+----------------------------
+Algorithm : DFS
+Path cost : 398
+Path len  : 398 hops
+Expanded  : 463
+Time      : 0.910 ms
+----------------------------
+Algorithm : Dijkstra
+Path cost : 50
+Path len  : 50 hops
+Expanded  : 888
+Time      : 4.117 ms
+----------------------------
+Algorithm : Bellman-Ford
+Path cost : 50
+Path len  : 50 hops
+Expanded  : 5
+Time      : 22.892 ms
+Iterations: 5
+Neg cycle : False
+----------------------------
+Algorithm : A*
+Path cost : 50
+Path len  : 50 hops
+Expanded  : 676
+Time      : 6.283 ms
+
+after adding forest, wall and swamp:
+
+Algorithm : BFS
+Path cost : 50
+Path len  : 50 hops
+Expanded  : 879
+Time      : 1.438 ms
+Hops      : 50
+----------------------------
+Algorithm : DFS
+Path cost : 560
+Path len  : 338 hops
+Expanded  : 403
+Time      : 1.239 ms
+----------------------------
+Algorithm : Dijkstra
+Path cost : 73
+Path len  : 52 hops
+Expanded  : 879
+Time      : 3.785 ms
+----------------------------
+Algorithm : Bellman-Ford
+Path cost : 73
+Path len  : 52 hops
+Expanded  : 5
+Time      : 15.005 ms
+Iterations: 5
+Neg cycle : False
+----------------------------
+Algorithm : A*
+Path cost : 73
+Path len  : 52 hops
+Expanded  : 699
+Time      : 3.622 ms
