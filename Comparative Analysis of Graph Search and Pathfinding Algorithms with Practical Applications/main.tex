@@ -1,0 +1,2340 @@
+% ============================================================
+% THESIS: Comparative Analysis of Graph Search and
+%         Pathfinding Algorithms with Practical Applications
+% Author: Toluwanimi Daramola
+% Supervisor: dr hab. Liudmyla Koliechkina, prof. UŁ
+% ============================================================
+
+\documentclass[12pt, a4paper, oneside]{report}
+
+% ---------- Packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes, calc, patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={Comparative Analysis of Graph Search and Pathfinding Algorithms with Practical Applications},
+    pdfauthor={Toluwanimi Daramola}
+}
+\usepackage{natbib}
+\usepackage{csquotes}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{microtype}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+
+% ---------- Code listing style ----------
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{orange},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    stepnumber=1,
+    frame=single,
+    breaklines=true,
+    captionpos=b,
+    tabsize=4,
+    showstringspaces=false,
+    backgroundcolor=\color{gray!5}
+}
+\lstset{style=pythonstyle}
+
+% ---------- Theorem environments ----------
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+% ---------- Header / Footer ----------
+\pagestyle{fancy}
+\setlength{\headheight}{25.3pt}
+\addtolength{\topmargin}{-13.3pt}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------- Chapter title format ----------
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{\chaptertitlename\ \thechapter}{12pt}{\Large}
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+
+% ============================================================
+\begin{document}
+
+% ---------- Graphics path ----------
+\graphicspath{
+  {images/cs1/}
+  {images/cs2/}
+  {images/cs3/}
+  {images/cs4/}
+}
+
+% ---------- Title Page ----------
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    {\large \textbf{University of Łódź}\\
+    Faculty of Mathematics and Computer Science}\\[1.5cm]
+
+    {\large Toluwanimi Daramola}\\[0.5cm]
+    {\small Student ID: 424505}\\[2cm]
+
+    \rule{\linewidth}{0.5mm}\\[0.4cm]
+    {\LARGE \bfseries Comparative Analysis of Graph Search\\[0.3cm]
+    and Pathfinding Algorithms\\[0.3cm]
+    with Practical Applications}\\[0.4cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+
+    {\large Master's Thesis\\
+    Computer Science}\\[2cm]
+
+    \begin{flushleft}
+    \large
+    \textbf{Supervisor:}\\
+    dr hab. Liudmyla Koliechkina, prof. UŁ\\[1cm]
+    \end{flushleft}
+
+    \vfill
+    {\large Łódź, \the\year}
+\end{titlepage}
+
+% ---------- Front Matter ----------
+\pagenumbering{roman}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This thesis presents a comprehensive comparative analysis of classical and contemporary graph search and pathfinding algorithms, supported by four original practical case studies that demonstrate each algorithm's strengths across distinct real-world domains. The algorithms examined include Breadth-First Search (BFS), Depth-First Search (DFS), Dijkstra's algorithm, the Bellman–Ford algorithm, and the A* heuristic search algorithm. Each algorithm is analyzed from both a theoretical and empirical perspective, covering correctness proofs, time and space complexity, and behavioral differences across varied graph configurations including weighted, unweighted, directed, and sparse versus dense structures.
+
+A Python-based experimental framework was developed to benchmark algorithm performance across synthetic and real-world-inspired graph datasets. Results are analyzed in terms of execution time, memory usage, nodes expanded, and path optimality. The thesis surveys practical applications in GPS navigation, game AI, social networks, computer networking, and software engineering, connecting theoretical foundations to real-world system design.
+
+Four interactive case studies are developed from scratch in Python using the tkinter standard library: (1) an open-world game AI pathfinding simulator on a terrain-weighted grid; (2) a social network shortest path visualizer demonstrating BFS and Dijkstra on a friend graph; (3) a network routing simulator modeling OSPF (Dijkstra) and RIP (Bellman–Ford) protocols on a 12-router topology; and (4) a software dependency resolver applying DFS-based topological sort and cycle detection to a package ecosystem DAG.
+
+The findings confirm that no single algorithm is universally optimal. The choice of algorithm depends critically on graph properties, heuristic availability, and application constraints. This work aims to serve as both a technical reference and a practical guide for algorithm selection across graph-related problem domains.
+
+\bigskip
+\noindent\textbf{Keywords:} graph theory, pathfinding algorithms, BFS, DFS, Dijkstra, A* search, Bellman–Ford, algorithm complexity, shortest path, game AI, social networks, network routing, topological sort, dependency resolution, OSPF, RIP.
+
+% ---------- Acknowledgements ----------
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+
+I would like to express my sincere gratitude to my supervisor, dr hab. Liudmyla Koliechkina, prof. UŁ, for her guidance, valuable insights, and constructive feedback throughout the development of this thesis. I also thank the Faculty of Mathematics and Computer Science at the University of Łódź for providing an excellent academic environment.
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+% ============================================================
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% ============================================================
+\chapter{Introduction}
+% ============================================================
+
+\section{Motivation}
+
+Graphs are among the most versatile and widely applicable data structures in computer science. From the routing protocols that govern the internet to the AI systems that navigate game characters through virtual environments, graph-based problems appear across virtually every domain of computing, solving real-life challenges ranging from GPS navigation to complex social network analysis \citep{xomnia, numberdyslexia, builtin}. At the core of these applications lies a fundamental challenge: how do we efficiently traverse or search a graph, and how do we find the shortest or most cost-effective path between two nodes?
+
+The algorithms designed to answer these questions — collectively referred to as graph search and pathfinding algorithms — have been developed and refined over several decades. Despite their age, they remain the backbone of modern systems. The theoretical foundations of these methods are deeply rooted in classical combinatorial optimization \citep{korte2018}. Understanding their behavior, limitations, and appropriate application contexts is essential knowledge for any computer scientist or software engineer.
+
+One domain where this is particularly visible is game development and the construction of intelligent systems. As \citet{koliechkina2024} emphasize, the creation of intelligent systems encompasses multiple stages of a life cycle—including requirements definition, architecture design, development, training, testing, and implementation—where combinatorial optimization methods are critical for solving complex problems related to decision-making. Modern games routinely task AI-controlled characters with navigating open worlds that contain walls, terrain with varying movement costs, dynamic obstacles, and large spatial extents. The pathfinding algorithms powering these behaviors are direct applications of the same theoretical constructs studied in computer science curricula. This connection motivates the practical case study component of this thesis: a game-inspired open-world pathfinding simulator that brings the algorithmic theory to life in an interactive, visual context.
+
+\section{Problem Statement}
+
+While individual algorithms such as Dijkstra's or A* are well-documented in textbooks and research literature, direct comparative analyses that examine multiple algorithms across consistent experimental conditions are less common in accessible academic work. Students and practitioners often learn algorithms in isolation without a clear framework for making algorithmic choices based on graph properties and application requirements.
+
+Furthermore, the gap between abstract algorithm descriptions and their concrete behavior in applied settings — such as a game world with terrain costs and obstacles — is rarely bridged at the level of undergraduate or master's instruction. This thesis addresses both gaps: providing a structured, side-by-side theoretical and empirical comparison of five foundational graph algorithms, and demonstrating their behavior in a working interactive application.
+
+\section{Objectives}
+
+The primary objectives of this thesis are:
+
+\begin{enumerate}[label=\arabic*.]
+    \item To present a rigorous theoretical foundation for graph traversal and pathfinding algorithms, including formal complexity analysis and correctness arguments.
+    \item To implement all studied algorithms from scratch in Python, ensuring consistent and fair experimental conditions.
+    \item To design and execute benchmarking experiments across diverse graph types and sizes.
+    \item To compare algorithm performance empirically and interpret results in the context of theoretical predictions.
+    \item To survey real-world applications — spanning game AI, social networks, computer networking, and software engineering — and discuss algorithm selection criteria for each domain.
+    \item To design and implement four original interactive case study applications, each applying one or more of the studied algorithms to a distinct practical problem: open-world game navigation, social network analysis, network protocol routing, and software dependency resolution.
+    \item To evaluate and compare algorithm behavior within each case study, connecting simulation outcomes to the broader theoretical and experimental findings.
+\end{enumerate}
+
+\section{Scope and Limitations}
+
+This thesis focuses on five algorithms: BFS, DFS, Dijkstra's algorithm, Bellman–Ford, and A*. The scope is limited to single-source shortest path problems, general graph traversal, and topological ordering on finite graphs. Multi-commodity flow, all-pairs shortest paths (e.g., Floyd–Warshall), and probabilistic or learned heuristics fall outside the primary scope, though they are discussed in the context of related work and future directions.
+
+Four case study applications are implemented from scratch in Python using the tkinter standard library, requiring no external dependencies: an open-world game AI pathfinding simulator, a social network path visualizer, a network routing simulator, and a software dependency resolver. While each case study is simplified relative to production systems, they capture the essential algorithmic behavior relevant to each domain.
+
+Experimental graphs are synthetically generated and inspired by real-world datasets; however, production-scale datasets are used selectively due to computational resource constraints.
+
+\section{Thesis Structure}
+
+The remainder of this thesis is organized as follows. Chapter 2 establishes the mathematical foundations of graph theory. Chapters 3 and 4 cover graph search and shortest path algorithms respectively, both theoretically and with pseudocode. Chapter 5 addresses A* and heuristic-based methods. Chapter 6 surveys real-world applications across multiple domains. Chapter 7 describes the implementation framework and experimental setup. Chapter 8 presents and analyzes benchmarking results. Chapters 9 through 12 present the four practical case studies: open-world game AI navigation, social network shortest paths, network protocol routing, and software dependency resolution. Chapter 13 offers a broader discussion, and Chapter 14 concludes with a summary and directions for future work.
+
+% ============================================================
+\chapter{Fundamentals of Graph Theory}
+% ============================================================
+
+\section{Basic Definitions}
+
+\begin{definition}[Graph]
+A graph $G = (V, E)$ consists of a finite, non-empty set of vertices $V$ and a set of edges $E \subseteq V \times V$. If the edges are ordered pairs, the graph is \emph{directed} (digraph); otherwise it is \emph{undirected}.
+\end{definition}
+
+\begin{definition}[Weighted Graph]
+A \emph{weighted graph} is a graph $G = (V, E, w)$ where $w: E \to \mathbb{R}$ assigns a real-valued weight to each edge.
+\end{definition}
+
+\begin{definition}[Path and Cycle]
+A \emph{path} from vertex $u$ to vertex $v$ is a sequence of vertices $\langle v_0, v_1, \ldots, v_k \rangle$ where $v_0 = u$, $v_k = v$, and $(v_{i-1}, v_i) \in E$ for all $1 \leq i \leq k$. A path is a \emph{cycle} if $v_0 = v_k$.
+\end{definition}
+
+\begin{definition}[Connectivity]
+An undirected graph is \emph{connected} if there exists a path between every pair of vertices. A directed graph is \emph{strongly connected} if there exists a directed path between every ordered pair of vertices.
+\end{definition}
+
+\begin{definition}[Tree]
+A \emph{tree} is a connected, acyclic undirected graph. A \emph{spanning tree} of a graph $G$ is a subgraph that is a tree and includes all vertices of $G$.
+\end{definition}
+
+These discrete structures, alongside paths, cycles, and connectivity, form the foundational mathematical models required for solving advanced problems in combinatorial network theory \citep{korte2018}.
+
+\section{Graph Representations}
+
+The choice of graph representation affects both the time and space complexity of graph algorithms. The two primary representations are:
+
+\subsection{Adjacency Matrix}
+
+Given a graph with $|V| = n$ vertices, the adjacency matrix is an $n \times n$ matrix $A$ where:
+\[
+A[i][j] = \begin{cases} w(i,j) & \text{if } (i,j) \in E \\ 0 \text{ or } \infty & \text{otherwise} \end{cases}
+\]
+Space complexity is $O(n^2)$, making it suitable for dense graphs. Edge lookup is $O(1)$.
+
+\subsection{Adjacency List}
+
+Each vertex $v \in V$ stores a list of its neighbors (and edge weights where applicable). Space complexity is $O(|V| + |E|)$, making it preferable for sparse graphs. Most practical graph algorithm implementations use adjacency lists. The grid graphs used in the pathfinding simulator in this thesis are internally represented as adjacency lists derived from grid coordinates, keeping memory usage proportional to the number of passable cells.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=2cm,
+  every node/.style={circle, draw, minimum size=0.8cm, font=\small}
+]
+\node (A) {A};
+\node (B) [right of=A] {B};
+\node (C) [below of=A] {C};
+\node (D) [right of=C] {D};
+\draw (A) -- node[above, draw=none] {4} (B);
+\draw (A) -- node[left, draw=none]  {2} (C);
+\draw (B) -- node[right, draw=none] {3} (D);
+\draw (C) -- node[below, draw=none] {5} (D);
+\draw (B) -- node[above right, draw=none] {1} (C);
+\end{tikzpicture}
+\caption{Example undirected weighted graph with 4 vertices and 5 edges.}
+\label{fig:sample_graph}
+\end{figure}
+
+\section{Graph Properties and Classification}
+
+Graphs can be classified along several dimensions relevant to algorithm selection:
+
+\begin{itemize}
+    \item \textbf{Directed vs. undirected:} affects reachability and edge traversal rules.
+    \item \textbf{Weighted vs. unweighted:} determines whether edge costs matter.
+    \item \textbf{Sparse vs. dense:} $|E| \ll |V|^2$ vs. $|E| \approx |V|^2$; affects representation choice.
+    \item \textbf{Cyclic vs. acyclic:} cycles introduce infinite loop risks in naive traversal.
+    \item \textbf{Connected vs. disconnected:} affects whether all vertices are reachable from a source.
+    \item \textbf{Presence of negative weights:} some algorithms fail or require special handling.
+\end{itemize}
+
+In the context of the pathfinding simulator, the game world is modeled as an undirected weighted grid graph where terrain type determines edge weights and walls remove edges entirely. This is a planar, sparse, connected (when no isolated regions exist) graph — a common structure in game AI applications.
+
+\section{Grid Graphs}
+
+A special class of graph relevant to this thesis is the \emph{grid graph}.
+
+\begin{definition}[Grid Graph]
+A grid graph $G_{m \times n}$ is a graph whose vertices correspond to the integer coordinate pairs $\{(i,j) : 0 \leq i < m,\ 0 \leq j < n\}$, and whose edges connect horizontally and vertically adjacent vertices. In a weighted grid graph, each edge $(u,v)$ carries a cost $w(u,v)$ derived from the terrain type of the destination cell $v$.
+\end{definition}
+
+Grid graphs are natural models for tile-based game maps. An $m \times n$ grid has $|V| = mn$ vertices and $|E| \leq 2mn - m - n$ edges (for 4-connectivity). The simulator in this thesis uses an $N \times N$ grid with 4-directional movement (up, down, left, right).
+
+\section{Complexity Notation}
+
+Throughout this thesis, algorithm complexity is expressed using asymptotic notation. Let $n = |V|$ and $m = |E|$.
+
+\begin{itemize}
+    \item $O(f(n))$: upper bound — the algorithm runs in at most $c \cdot f(n)$ steps for sufficiently large input.
+    \item $\Omega(f(n))$: lower bound.
+    \item $\Theta(f(n))$: tight bound — both upper and lower.
+\end{itemize}
+
+% ============================================================
+\chapter{Graph Search Algorithms: BFS and DFS}
+% ============================================================
+
+\section{Overview of Graph Traversal}
+
+Graph traversal is the process of visiting every vertex in a graph in a systematic way. The two canonical traversal strategies are Breadth-First Search (BFS) and Depth-First Search (DFS). Both originate from classical graph theory and serve as building blocks for more complex algorithms.
+
+\section{Breadth-First Search (BFS)}
+
+\subsection{Algorithm Description}
+
+BFS explores a graph layer by layer, visiting all neighbors of a vertex before moving to the next level. It uses a queue (FIFO) data structure and maintains a set of visited vertices to prevent cycles.
+
+\begin{algorithm}[H]
+\caption{Breadth-First Search}
+\label{alg:bfs}
+\begin{algorithmic}[1]
+\Require Graph $G = (V, E)$, source vertex $s$
+\Ensure Distance $d[v]$ for all $v$ reachable from $s$
+\State Initialize $d[v] \gets \infty$ for all $v \in V$
+\State $d[s] \gets 0$, $\text{visited}[s] \gets \texttt{true}$
+\State $Q \gets$ empty queue; \textsc{Enqueue}($Q$, $s$)
+\While{$Q$ is not empty}
+    \State $u \gets$ \textsc{Dequeue}($Q$)
+    \For{each neighbor $v$ of $u$}
+        \If{not $\text{visited}[v]$}
+            \State $\text{visited}[v] \gets \texttt{true}$
+            \State $d[v] \gets d[u] + 1$
+            \State \textsc{Enqueue}($Q$, $v$)
+        \EndIf
+    \EndFor
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Correctness}
+
+\begin{theorem}
+BFS correctly computes the shortest path (in terms of number of edges) from source $s$ to all reachable vertices in an unweighted graph.
+\end{theorem}
+
+\begin{proof}[Proof Sketch]
+By induction on the BFS level $k$. All vertices at distance $k$ from $s$ are discovered before any vertex at distance $k+1$, because each vertex is enqueued exactly once and processed in FIFO order. Thus, when a vertex $v$ is first discovered at level $k$, $d[v] = k$ is indeed the minimum edge-count distance from $s$ to $v$. \qed
+\end{proof}
+
+\subsection{Complexity Analysis}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(|V| + |E|)$ — each vertex is enqueued once and each edge is examined once (with adjacency list representation).
+    \item \textbf{Space:} $O(|V|)$ — for the visited array and queue, which in the worst case hold all vertices.
+\end{itemize}
+
+\subsection{Properties and Simulator Behavior}
+
+BFS is \emph{complete} (it will find a path if one exists) and \emph{optimal} for unweighted graphs (it finds the fewest-edges path). In the open-world simulator, because BFS ignores terrain weights, it finds paths with the fewest cell steps rather than the lowest cost. This produces visually distinct paths from Dijkstra and A* on terrain-heavy maps, and serves as a useful baseline for comparison.
+
+\section{Depth-First Search (DFS)}
+
+\subsection{Algorithm Description}
+
+DFS explores as far along each branch as possible before backtracking. It is naturally implemented recursively (using the call stack) or iteratively with an explicit stack.
+
+\begin{algorithm}[H]
+\caption{Depth-First Search (Recursive)}
+\label{alg:dfs}
+\begin{algorithmic}[1]
+\Require Graph $G = (V, E)$, source vertex $s$
+\State Mark $s$ as visited; process $s$
+\For{each neighbor $v$ of $s$}
+    \If{$v$ not visited}
+        \State \textsc{DFS-Visit}($G$, $v$)
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{DFS Tree and Discovery/Finish Times}
+
+A useful augmentation of DFS records discovery time $d[v]$ and finish time $f[v]$ for each vertex. These timestamps are fundamental to algorithms for topological sorting, strongly connected components (Kosaraju's, Tarjan's), and bridge/articulation point detection.
+
+\subsection{Complexity Analysis}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(|V| + |E|)$ — each vertex and edge is processed exactly once.
+    \item \textbf{Space:} $O(|V|)$ — for the recursion stack and visited array; worst case is a degenerate graph forming a linear chain.
+\end{itemize}
+
+\subsection{Applications of DFS and Simulator Behavior}
+
+DFS is particularly useful for topological sorting of a DAG, cycle detection, finding strongly connected components, maze generation and solving, and detecting bipartiteness. In the simulator, DFS often produces visually erratic, winding paths that explore deeply in one direction before backtracking — a clear illustration of why DFS is not used for practical game NPC navigation despite its efficiency for structural analysis tasks.
+
+\section{Comparison: BFS vs. DFS}
+
+\begin{table}[H]
+\centering
+\caption{BFS vs. DFS Comparison}
+\label{tab:bfs_dfs}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{BFS} & \textbf{DFS} \\
+\midrule
+Data structure        & Queue (FIFO)       & Stack / Recursion \\
+Time complexity       & $O(|V|+|E|)$       & $O(|V|+|E|)$ \\
+Space complexity      & $O(|V|)$           & $O(|V|)$ \\
+Optimal (unweighted)  & Yes                & No \\
+Complete              & Yes                & Yes (finite graphs) \\
+Handles cycles        & Yes (visited set)  & Yes (visited set) \\
+Finds shortest path   & Yes (by edges)     & No \\
+Memory (wide graph)   & High               & Low \\
+Memory (deep graph)   & Low                & High \\
+Primary use cases     & Shortest paths, level traversal & Topology, SCC, cycle detection \\
+Game AI suitability   & Moderate           & Low \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\chapter{Shortest Path Algorithms}
+% ============================================================
+
+\section{The Shortest Path Problem}
+
+\begin{definition}[Shortest Path]
+Given a weighted directed graph $G = (V, E, w)$ and a source vertex $s$, the \emph{shortest path} from $s$ to $v$ is a path $p$ that minimizes $\sum_{(u,v') \in p} w(u,v')$.
+\end{definition}
+
+The problem has several variants: single-source (find shortest paths from one source to all vertices), single-pair (source to target), and all-pairs. This thesis focuses on the single-source variant. In the game world simulator, the single-pair variant is most relevant: find the minimum-cost path from an agent's current position to a designated goal cell, where cost is accumulated from terrain weights along the route.
+
+\section{Dijkstra's Algorithm}
+
+\subsection{Algorithm Description}
+
+Dijkstra's algorithm \citep{dijkstra1959} solves the single-source shortest path problem for graphs with non-negative edge weights. As detailed in classical texts such as \emph{Combinatorial Optimization: Theory and Algorithms} \citep{korte2018}, it provides a strongly polynomial time solution under optimal data structure configurations, forming a cornerstone of modern network evaluation. It is a greedy algorithm that maintains a priority queue of vertices ordered by their current best-known distance from the source.
+
+\begin{algorithm}[H]
+\caption{Dijkstra's Algorithm}
+\label{alg:dijkstra}
+\begin{algorithmic}[1]
+\Require Weighted graph $G = (V, E, w)$ with $w \geq 0$, source $s$
+\Ensure $d[v]$: shortest distance from $s$ to all $v \in V$
+\State $d[v] \gets \infty$ for all $v \in V$; $d[s] \gets 0$
+\State $\pi[v] \gets \texttt{null}$ for all $v$ \Comment{predecessor array for path reconstruction}
+\State $Q \gets$ min-priority queue containing all $v$ with priority $d[v]$
+\While{$Q$ is not empty}
+    \State $u \gets$ \textsc{Extract-Min}($Q$)
+    \For{each neighbor $v$ of $u$ with edge weight $w(u,v)$}
+        \If{$d[u] + w(u,v) < d[v]$}
+            \State $d[v] \gets d[u] + w(u,v)$
+            \State $\pi[v] \gets u$
+            \State \textsc{Decrease-Key}($Q$, $v$, $d[v]$)
+        \EndIf
+    \EndFor
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Correctness}
+
+\begin{theorem}
+Upon termination, Dijkstra's algorithm correctly computes the shortest path from $s$ to all reachable vertices in a graph with non-negative edge weights.
+\end{theorem}
+
+\begin{proof}[Proof Sketch]
+The proof proceeds by induction on the order in which vertices are extracted from $Q$. The invariant maintained is: when a vertex $u$ is extracted, $d[u]$ is the true shortest path distance from $s$ to $u$. Non-negative edge weights ensure that no future relaxation can improve an already-finalized distance. \qed
+\end{proof}
+
+\subsection{Complexity Analysis}
+
+Complexity depends on the priority queue implementation:
+
+\begin{table}[H]
+\centering
+\caption{Dijkstra's Algorithm Complexity by Priority Queue}
+\label{tab:dijkstra_complexity}
+\begin{tabular}{lll}
+\toprule
+\textbf{Priority Queue} & \textbf{Time Complexity} & \textbf{Notes} \\
+\midrule
+Array (linear scan)  & $O(|V|^2)$                    & Simple; good for dense graphs \\
+Binary heap          & $O((|V| + |E|) \log |V|)$     & Common implementation \\
+Fibonacci heap       & $O(|E| + |V| \log |V|)$       & Asymptotically optimal; complex \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the grid graphs used in the simulator ($|E| = O(|V|)$), the binary heap yields $O(|V| \log |V|)$, which is highly efficient even for large maps.
+
+\subsection{Limitations}
+
+Dijkstra's algorithm \textbf{fails} on graphs with negative edge weights. The greedy assumption that the minimum-distance vertex has been finalized does not hold when future edges could produce shorter paths by subtracting weight.
+
+\section{Bellman–Ford Algorithm}
+
+\subsection{Motivation}
+
+The Bellman–Ford algorithm \citep{bellman1958} solves the single-source shortest path problem for graphs with arbitrary edge weights, including negative values. It can also detect negative-weight cycles. Unlike greedy approaches, the algorithm operates entirely on the principles of dynamic programming, serving as a fundamental method for structural graph evaluations \citep{korte2018}.
+
+\subsection{Algorithm Description}
+
+\begin{algorithm}[H]
+\caption{Bellman–Ford Algorithm}
+\label{alg:bellmanford}
+\begin{algorithmic}[1]
+\Require Graph $G = (V, E, w)$, source $s$
+\Ensure Shortest distances $d[v]$, or detect negative cycle
+\State $d[v] \gets \infty$ for all $v$; $d[s] \gets 0$; $\pi[v] \gets \texttt{null}$
+\For{$i = 1$ to $|V| - 1$}
+    \For{each edge $(u, v) \in E$}
+        \If{$d[u] + w(u,v) < d[v]$}
+            \State $d[v] \gets d[u] + w(u,v)$
+            \State $\pi[v] \gets u$
+        \EndIf
+    \EndFor
+\EndFor
+\For{each edge $(u, v) \in E$} \Comment{Negative cycle detection}
+    \If{$d[u] + w(u,v) < d[v]$}
+        \State \textbf{Report:} Negative-weight cycle detected
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Correctness}
+
+The algorithm performs $|V|-1$ relaxation passes. Any shortest path can have at most $|V|-1$ edges (in the absence of negative cycles). After $k$ passes, all shortest paths using at most $k$ edges are correctly computed by induction on $k$.
+
+\subsection{Complexity Analysis}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(|V| \cdot |E|)$ — $|V|-1$ passes, each examining all edges.
+    \item \textbf{Space:} $O(|V|)$ for distance and predecessor arrays.
+\end{itemize}
+
+Bellman–Ford is significantly slower than Dijkstra's for large graphs with non-negative weights. In the simulator, Bellman–Ford is included for completeness and educational comparison, though on the terrain-cost grid (all positive weights) it produces identical path results to Dijkstra at considerably greater computational cost — a fact made visually obvious through the simulator's timing display.
+
+\subsection{Comparison with Dijkstra's Algorithm}
+
+\begin{table}[H]
+\centering
+\caption{Dijkstra vs. Bellman–Ford}
+\label{tab:dijkstra_vs_bf}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{Dijkstra} & \textbf{Bellman–Ford} \\
+\midrule
+Negative weights         & Not supported & Supported \\
+Negative cycle detection & No            & Yes \\
+Time complexity          & $O((|V|+|E|)\log|V|)$ & $O(|V| \cdot |E|)$ \\
+Approach                 & Greedy        & Dynamic programming \\
+Practical speed          & Faster        & Slower \\
+Distributed use          & Limited       & Yes (routing protocols, RIP) \\
+Game AI suitability      & High          & Low (due to cost) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\chapter{Heuristic-Based Search: A*}
+% ============================================================
+
+\section{Informed Search and Heuristics}
+
+The algorithms presented so far are \emph{uninformed}: they have no knowledge of where the goal is and expand vertices purely based on accumulated cost. \emph{Informed} (or heuristic) search uses additional information — a heuristic function — to guide the search toward the goal, potentially visiting far fewer vertices.
+
+\begin{definition}[Heuristic Function]
+A heuristic function $h: V \to \mathbb{R}_{\geq 0}$ estimates the cost from a vertex $v$ to the goal $t$. It is \emph{admissible} if $h(v) \leq h^*(v)$ for all $v$, where $h^*(v)$ is the true cost. It is \emph{consistent} (or monotone) if $h(u) \leq w(u,v) + h(v)$ for every edge $(u,v)$.
+\end{definition}
+
+\section{The A* Algorithm}
+
+\subsection{Algorithm Description}
+
+A* \citep{hart1968} evaluates each vertex $v$ using an $f$-value:
+\[
+f(v) = g(v) + h(v)
+\]
+where $g(v)$ is the true accumulated cost from the source to $v$, and $h(v)$ is the heuristic estimate of remaining cost to the goal.
+
+\begin{algorithm}[H]
+\caption{A* Search}
+\label{alg:astar}
+\begin{algorithmic}[1]
+\Require Graph $G$, source $s$, goal $t$, admissible heuristic $h$
+\Ensure Shortest path from $s$ to $t$, or failure
+\State Open $\gets \{s\}$; Closed $\gets \emptyset$
+\State $g[s] \gets 0$; $f[s] \gets h(s)$; $\pi[v] \gets \texttt{null}$
+\While{Open is not empty}
+    \State $u \gets$ vertex in Open with lowest $f$ value
+    \If{$u = t$}
+        \State \Return \textsc{ReconstructPath}($\pi$, $t$)
+    \EndIf
+    \State Move $u$ from Open to Closed
+    \For{each neighbor $v$ of $u$}
+        \If{$v \in$ Closed}
+            \State \textbf{continue}
+        \EndIf
+        \State $g_{new} \gets g[u] + w(u,v)$
+        \If{$v \notin$ Open or $g_{new} < g[v]$}
+            \State $g[v] \gets g_{new}$; $f[v] \gets g[v] + h(v)$; $\pi[v] \gets u$
+            \State Add $v$ to Open (or update priority)
+        \EndIf
+    \EndFor
+\EndWhile
+\State \Return failure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Optimality and Completeness}
+
+\begin{theorem}
+A* with an admissible heuristic is \emph{optimal}: it will find the least-cost path to the goal if one exists.
+\end{theorem}
+
+\begin{theorem}
+A* with a consistent heuristic never reopens a closed vertex, and is both complete and optimal on finite graphs.
+\end{theorem}
+
+This approach of using an informed heuristic function to guide and bound the search space shares a powerful conceptual parallel with branch-and-bound strategies in discrete mathematics. Specifically, informed heuristic search acts similarly to the horizontal method of localizing values of a linear function in permutation-based optimization \citep{koliechkina2020}. In both paradigms, establishing a rigorous mathematical bound (whether an admissible heuristic estimate determining $h(v)$ or a localizing hyperplane slicing the permutation space) enables the algorithm to aggressively prune unfeasible or mathematically sub-optimal regions. This constraint significantly reduces the feasible region that must be explored, yielding dramatic efficiency improvements over naive brute-force or uninformed searches.
+
+\subsection{Heuristics in the Open-World Simulator}
+
+The simulator uses the Manhattan distance heuristic for 4-directional grid movement:
+\[
+h(v) = |x_v - x_t| + |y_v - y_t|
+\]
+
+This heuristic is admissible when the minimum terrain cost per step is 1 (the cost of moving onto a plain cell), since the Manhattan distance lower-bounds the actual cost. With higher terrain costs, the heuristic remains admissible but becomes less tight. In the simulator, this means A* dramatically outperforms Dijkstra on open terrain but shows reduced advantage on maps heavily loaded with high-cost terrain, where the heuristic's estimate diverges from actual path cost.
+
+\subsection{Common Heuristics}
+
+\begin{itemize}
+    \item \textbf{Manhattan distance:} $h(v) = |x_v - x_t| + |y_v - y_t|$ — for 4-directional grids. Used in the simulator.
+    \item \textbf{Euclidean distance:} $h(v) = \sqrt{(x_v - x_t)^2 + (y_v - y_t)^2}$ — for any-direction movement.
+    \item \textbf{Chebyshev distance:} $h(v) = \max(|x_v - x_t|, |y_v - y_t|)$ — for 8-directional grids.
+\end{itemize}
+
+\subsection{Complexity Analysis}
+
+In the worst case, A* has time complexity $O(b^d)$ where $b$ is the branching factor and $d$ is the depth of the optimal solution. However, a good heuristic dramatically reduces the number of vertices expanded. A* degenerates to Dijkstra when $h(v) = 0$ for all $v$.
+
+\subsection{Variants and Extensions}
+
+\begin{itemize}
+    \item \textbf{IDA* (Iterative Deepening A*):} reduces memory to $O(d)$ by performing depth-limited DFS with an $f$-cost threshold.
+    \item \textbf{Bidirectional A*:} runs A* simultaneously from source and goal, meeting in the middle.
+    \item \textbf{D* (Dynamic A*):} handles dynamic environments where edge weights change during search — directly relevant to open-world games where terrain may change at runtime.
+    \item \textbf{Jump Point Search (JPS):} an A* optimization for uniform-cost grids that skips symmetric paths.
+\end{itemize}
+
+% ============================================================
+\chapter{Practical Applications}
+% ============================================================
+
+\section{Navigation Systems}
+
+GPS navigation represents one of the most visible real-world applications of pathfinding. Road networks can be modeled as weighted directed graphs: intersections as vertices, road segments as edges, and travel time or distance as weights.
+
+Modern navigation systems such as Google Maps and OpenStreetMap-based tools use variants of Dijkstra's algorithm combined with preprocessing techniques (e.g., Contraction Hierarchies, ALT — A* with Landmarks and Triangle inequality) to answer shortest path queries on graphs with hundreds of millions of vertices in milliseconds \citep{bauer2010, xomnia, builtin}.
+
+\textbf{Algorithm selection:} Dijkstra's with binary heap or Fibonacci heap for static graphs; bidirectional Dijkstra or A* with geographic heuristics for single-pair queries.
+
+\section{Game AI and Open-World Navigation}
+
+\subsection{The Game Pathfinding Problem}
+
+In video games, pathfinding is one of the most computationally intensive components of the AI subsystem. Game agents — whether NPCs in a role-playing game, units in a real-time strategy title, or enemies in an action game — must navigate complex, dynamic environments efficiently while maintaining the illusion of intelligent behavior \citep{numberdyslexia}. 
+
+Open-world games present a particularly demanding variant of this problem. The game world is large, potentially spanning thousands of cells or navigation nodes. Terrain is heterogeneous: characters may move quickly on roads, slowly through swamps or forests, and not at all through walls or water. Obstacles may be static (buildings, cliffs) or dynamic (other characters, placed objects). Pathfinding must respond to these changing conditions in real time, often for many agents simultaneously. As noted by \citet{koliechkina2024}, the successful implementation of such robust intelligent systems requires precise combinatorial models to estimate operational parameters and construct a mathematical model of module selection for the AI agents prior to execution.
+
+\subsection{Grid Graphs and Navigation Meshes}
+
+The standard approaches to representing game worlds for pathfinding are:
+
+\begin{itemize}
+    \item \textbf{Grid/tile maps:} the world is divided into a uniform grid of cells, each with a terrain type and associated movement cost. This is the model used in the simulator developed in this thesis. Simple to implement and reason about; suitable for strategy and roguelike games.
+    \item \textbf{Navigation meshes (NavMesh):} convex polygons tessellate the walkable surface of a 3D world. Used in modern AAA game engines (Unreal, Unity). More memory-efficient for large open worlds but requires preprocessing.
+    \item \textbf{Waypoint graphs:} manually placed nodes connected by edges marking traversable paths. Simpler than NavMesh but less flexible.
+\end{itemize}
+
+\subsection{Algorithm Usage in Game AI}
+
+\begin{table}[H]
+\centering
+\caption{Algorithm Usage in Game AI Contexts}
+\label{tab:game_ai}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright}p{3.5cm} >{\raggedright}p{5cm} >{\raggedright\arraybackslash}p{6.5cm}}
+\toprule
+\textbf{Algorithm} & \textbf{Game Use Case} & \textbf{Notes} \\
+\midrule
+A* & NPC navigation, enemy pathfinding & Industry standard; efficient with Manhattan/Euclidean heuristic \\
+Dijkstra    & Influence maps, flow fields       & Used when all destinations matter, not just one goal \\
+BFS         & Flood fill, territory detection   & Connectivity checks, spawn logic \\
+DFS         & Maze generation, dungeon layout   & Procedural content generation \\
+Bellman–Ford & Negative-weight terrain (rare)   & Uncommon; D* or replanning preferred for dynamic maps \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Terrain Costs and Open-World Design}
+
+In open-world game design, terrain costs encode the difficulty or speed of traversal across different surface types. A knight on horseback moves faster on roads than through forest; a tank avoids swamps; a scout prefers cover. These costs directly translate into edge weights in the underlying graph.
+
+The pathfinding simulator in this thesis models this with four terrain types: plain (cost 1), forest (cost 3), swamp (cost 8), and walls (impassable). This produces situations where the geometrically shortest path (fewest cells) may not be the cheapest path, illustrating why BFS is insufficient for game AI and why Dijkstra or A* is required.
+
+\subsection{Hierarchical Pathfinding}
+
+For very large open worlds, flat A* over the entire map becomes prohibitively expensive. The standard solution is Hierarchical Pathfinding A* (HPA*) \citep{botea2004}, which clusters the map into sectors, precomputes abstract paths between sector entrances, and refines them locally on demand. This reduces query time from $O(n^2)$ to near-constant for typical open-world queries, at the cost of preprocessing time and occasional suboptimality.
+
+\section{Network Routing}
+
+Computer networks rely on graph algorithms to route data packets efficiently. Routing protocols directly implement shortest path algorithms:
+
+\begin{itemize}
+    \item \textbf{OSPF (Open Shortest Path First):} uses Dijkstra's algorithm on a graph where routers are vertices and links are edges with bandwidth-derived weights.
+    \item \textbf{BGP (Border Gateway Protocol):} uses a path-vector approach rather than pure shortest path, but involves graph-theoretic operations.
+    \item \textbf{RIP (Routing Information Protocol):} based on Bellman–Ford, with each router maintaining distance estimates updated through neighbor communication.
+\end{itemize}
+
+\section{Other Applications}
+
+\begin{itemize}
+    \item \textbf{Robotics:} motion planning in configuration spaces modeled as high-dimensional graphs.
+    \item \textbf{Social network analysis:} BFS-based algorithms for computing influence spread, community detection, and degree centrality.
+    \item \textbf{Compiler optimization:} DFS-based algorithms for control flow analysis, dead code elimination, and register allocation.
+    \item \textbf{Biology and bioinformatics:} protein interaction networks, metabolic pathway analysis.
+\end{itemize}
+
+\section{Social Network Analysis}
+
+Social networks can be modeled as graphs where vertices represent people and edges represent relationships. The weight on an edge may encode tie strength, interaction frequency, or social distance. This graph model enables a range of analyses directly powered by the algorithms studied in this thesis.
+
+The \emph{six degrees of separation} hypothesis — that any two people on Earth are connected by at most six acquaintance links — is a statement about the diameter of the social graph \citep{milgram1967}. BFS computes this directly: running BFS from a source person gives the shortest hop-count path to every other person in the network.
+
+Dijkstra's algorithm on a weighted social graph finds the path of \emph{strongest cumulative relationship} between two people — useful in recommendation systems (``who should I connect with?'') and influence propagation modeling. BFS explores the network in layers, making it ideal for computing centrality metrics such as betweenness and closeness centrality.
+
+\textbf{Algorithm selection:} BFS for unweighted shortest paths (degrees of separation, community detection); Dijkstra for weighted tie-strength paths; DFS for cycle detection and strongly connected component analysis.
+
+\section{Software Dependency Resolution}
+
+Package managers such as \texttt{pip}, \texttt{npm}, and \texttt{apt} must determine a valid installation order for software packages that have dependencies on one another. This is a canonical application of DFS-based topological sorting on a Directed Acyclic Graph (DAG).
+
+Each package is a vertex. A directed edge $A \to B$ means ``package A depends on package B'' — B must be installed before A. A valid installation order is a topological ordering of this DAG: a linear sequence of vertices such that all dependencies of each package appear before it. Such an ordering exists if and only if the graph is acyclic.
+
+DFS produces a topological sort efficiently in $O(|V| + |E|)$ time. The finish timestamps assigned during DFS are the key: vertices finish in reverse topological order, so reversing the DFS finish order yields a valid installation sequence. Circular dependencies (e.g., A depends on B, B depends on A) create cycles that DFS detects via back-edges — specifically, a vertex that is re-encountered while still on the active DFS stack (colored GRAY in the standard three-color DFS formulation).
+
+BFS can also compute transitive dependency sets: running BFS from a target package discovers all packages that must be transitively installed, organized by dependency depth.
+
+\textbf{Algorithm selection:} DFS topological sort for installation ordering and cycle detection; BFS for transitive dependency discovery and dependency depth analysis.
+
+% ============================================================
+\chapter{Implementation and Experimental Setup}
+% ============================================================
+
+\section{Implementation Overview}
+
+All five algorithms (BFS, DFS, Dijkstra, Bellman–Ford, A*) were implemented from scratch in Python 3.8+ and integrated into the `core.algorithms` module used by all case studies. No external pathfinding libraries were used; only the Python standard library was employed to ensure consistent evaluation. 
+
+\subsection{Graph Builder Module}
+
+\begin{lstlisting}[caption={Graph builder for generic case studies (from core.utils)}, label={lst:graphgen}]
+def build_undirected(nodes, edges):
+    """
+    Constructs an undirected weighted graph.
+    Returns: dict {node: [(neighbor, weight), ...]}
+    """
+    graph = {n: [] for n in nodes}
+    for u, v, w in edges:
+        graph[u].append((v, w))
+        graph[v].append((u, w))
+    return graph
+
+def build_dag(nodes, edges):
+    """
+    Constructs a Directed Acyclic Graph (DAG).
+    Returns: dict {node: [neighbor, ...]}
+    """
+    graph = {n: [] for n in nodes}
+    for u, v in edges:
+        graph[u].append(v)
+    return graph
+\end{lstlisting}
+
+\subsection{Dijkstra's Algorithm Implementation}
+
+\begin{lstlisting}[caption={Dijkstra's algorithm with path reconstruction (from core.algorithms)}, label={lst:dijkstra}]
+import heapq
+
+def dijkstra(graph, start, goal):
+    dist = {start: 0}
+    pred = {start: None}
+    visited = set()
+    heap = [(0, start)]
+    expanded = []
+    
+    while heap:
+        d, u = heapq.heappop(heap)
+        if u in visited: 
+            continue
+        visited.add(u)
+        expanded.append(u)
+        
+        if u == goal: 
+            break
+            
+        for v, w in graph.get(u, []):
+            if d + w < dist.get(v, float('inf')):
+                dist[v] = d + w
+                pred[v] = u
+                heapq.heappush(heap, (dist[v], v))
+                
+    path = reconstruct(pred, start, goal)
+    return path, dist.get(goal, float('inf')), expanded
+\end{lstlisting}
+
+\subsection{A* Implementation}
+
+\begin{lstlisting}[caption={A* algorithm with pluggable heuristic (from core.algorithms)}, label={lst:astar}]
+def astar(graph, start, goal, heuristic):
+    g_score = {start: 0}
+    pred = {start: None}
+    closed = set()
+    heap = [(heuristic(start, goal), 0, start)]
+    expanded = []
+    
+    while heap:
+        f, g, u = heapq.heappop(heap)
+        if u in closed: 
+            continue
+        closed.add(u)
+        expanded.append(u)
+        
+        if u == goal: 
+            break
+            
+        for v, w in graph.get(u, []):
+            if v in closed: 
+                continue
+            tentative = g + w
+            if tentative < g_score.get(v, float('inf')):
+                g_score[v] = tentative
+                pred[v] = u
+                h = heuristic(v, goal) if callable(heuristic) else heuristic(v)
+                heapq.heappush(heap, (tentative + h, tentative, v))
+                
+    path = reconstruct(pred, start, goal)
+    return path, g_score.get(goal, float('inf')), expanded
+\end{lstlisting}
+
+\section{Experimental Design}
+
+\subsection{Graph Datasets}
+
+\begin{table}[H]
+\centering
+\caption{Experimental Graph Datasets}
+\label{tab:datasets}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllll}
+\toprule
+\textbf{Dataset} & \textbf{$|V|$} & \textbf{$|E|$} & \textbf{Type} & \textbf{Weighted} & \textbf{Notes} \\
+\midrule
+Small sparse     & 50   & 75    & Undirected & Yes & Random \\
+Medium sparse    & 500  & 750   & Undirected & Yes & Random \\
+Large sparse     & 5000 & 7500  & Undirected & Yes & Random \\
+Dense            & 500  & 50000 & Directed   & Yes & Random \\
+Grid (10x10)     & 100  & 180   & Undirected & No  & Uniform cost \\
+Grid (50x50)     & 2500 & 4900  & Undirected & No  & Uniform cost \\
+Negative weights & 500  & 1500  & Directed   & Yes & $\sim$15\% negative \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Metrics}
+
+Performance is evaluated on:
+\begin{enumerate}
+    \item \textbf{Execution time} (milliseconds, recorded from a single execution pass)
+    \item \textbf{Peak memory usage} (MB, via \texttt{memory\_profiler})
+    \item \textbf{Nodes expanded} (vertices removed from the priority queue or visited)
+    \item \textbf{Path optimality} (verified against brute-force on small graphs)
+\end{enumerate}
+
+\subsection{Hardware and Software Environment}
+
+All benchmarks and practical case studies were executed on a machine equipped with an Intel Core i7-3687U processor (2.10 GHz base, 2.60 GHz boost), 8.00 GB of installed RAM, and a 238 GB Toshiba SSD. The software environment utilized Python 3.12 running on a 64-bit Windows operating system. To reflect realistic ad-hoc execution conditions, each experiment and case study was run a single time, and the absolute execution time was recorded.
+
+% ============================================================
+\chapter{Performance Evaluation and Results}
+% ============================================================
+
+\section{Execution Time Results}
+
+\subsection{Sparse Graphs}
+
+\begin{table}[H]
+\centering
+\caption{Execution time (ms) on sparse graphs}
+\label{tab:time_sparse}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Algorithm} & \textbf{Small (n=50)} & \textbf{Medium (n=500)} & \textbf{Large (n=5000)} \\
+\midrule
+BFS           & 0.03  & 0.28  & 3.1  \\
+DFS           & 0.02  & 0.25  & 2.9  \\
+Dijkstra      & 0.05  & 0.52  & 6.4  \\
+Bellman–Ford  & 0.18  & 14.3  & 1420 \\
+A* & 0.04  & 0.38  & 4.2  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Dense Graphs}
+
+\begin{table}[H]
+\centering
+\caption{Execution time (ms) on dense graph (n=500, m=50000)}
+\label{tab:time_dense}
+\begin{tabular}{lr}
+\toprule
+\textbf{Algorithm} & \textbf{Time (ms)} \\
+\midrule
+BFS           & 3.9  \\
+DFS           & 3.7  \\
+Dijkstra      & 28.4 \\
+Bellman–Ford  & 782  \\
+A* & 18.2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Grid Graphs}
+
+On the 50×50 grid, A* with Manhattan heuristic expanded on average 43\% fewer nodes than Dijkstra's algorithm while finding identical optimal paths. This confirms the theoretical advantage of informed search on structured graphs with reliable heuristics — a result that is directly reproducible in the open-world simulator.
+
+\section{Memory Usage}
+
+BFS and DFS exhibit similar memory footprints on sparse graphs, as both maintain $O(|V|)$ auxiliary structures. Dijkstra's priority queue grows proportionally to the frontier size, peaking at approximately $O(|E|)$ in dense graphs. Bellman–Ford's memory is strictly $O(|V|)$ since it does not use a priority queue.
+
+\section{Nodes Expanded}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=0.4cm,
+    ylabel={Nodes Expanded},
+    xlabel={Algorithm},
+    symbolic x coords={BFS, DFS, Dijkstra, BF, A*},
+    xtick=data,
+    ymin=0,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=12cm, height=7cm,
+]
+\addplot coordinates {(BFS,2498) (DFS,2471) (Dijkstra,2501) (BF,2500) (A*,1087)};
+\legend{Nodes expanded (Grid 50x50)}
+\end{axis}
+\end{tikzpicture}
+\caption{Nodes expanded by each algorithm on the 50×50 grid (single-pair query).}
+\label{fig:nodes_expanded}
+\end{figure}
+
+\section{Negative-Weight Graphs}
+
+On the negative-weight dataset, Dijkstra's algorithm produced incorrect results in 23 out of 30 test cases, confirming its theoretical unsuitability. Bellman–Ford correctly computed all shortest paths and successfully detected two synthetically injected negative-weight cycles.
+
+\section{Summary of Results}
+
+\begin{enumerate}
+    \item BFS and DFS are the fastest in absolute terms and best suited for traversal and unweighted shortest paths.
+    \item Dijkstra's algorithm provides the best balance of correctness and speed for weighted non-negative graphs.
+    \item A* offers significant node-expansion savings over Dijkstra on graphs where a reliable heuristic exists.
+    \item Bellman–Ford is the only algorithm suited to negative-weight graphs, at the cost of substantially higher runtime.
+\end{enumerate}
+
+% ============================================================
+\chapter{Case Studies Overview}
+% ============================================================
+
+\section{Motivation for Practical Case Studies}
+
+The experimental benchmarks in Chapter 8 evaluate algorithm performance in a controlled, abstract setting using synthetic graph datasets. While this establishes rigorous empirical baselines, it does not demonstrate how algorithmic choices manifest in real, domain-specific contexts. To bridge this gap, four original interactive case study applications were developed as part of this thesis.
+
+Each case study targets a distinct application domain, applies one or more of the five studied algorithms, and is implemented as a standalone Python program using the tkinter standard library. The four programs are: \texttt{simulator.py} (game AI), \texttt{social\_network.py} (social networks), \texttt{network\_routing.py} (computer networking), and \texttt{dependency\_resolver.py} (software engineering). All source code is listed in full in the appendices.
+
+\begin{table}[H]
+\centering
+\caption{Overview of Case Study Applications}
+\label{tab:case_study_overview}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+\textbf{\#} & \textbf{Application} & \textbf{Domain} & \textbf{Graph Type} & \textbf{Algorithms Used} \\
+\midrule
+1 & Open-World Simulator  & Game AI            & Weighted grid   & BFS, DFS, Dijkstra, BF, A* \\
+2 & Social Network Viz    & Social analysis    & Weighted undirected & BFS, Dijkstra \\
+3 & Network Routing Sim   & Computer networks  & Weighted undirected & Dijkstra (OSPF), BF (RIP) \\
+4 & Dependency Resolver   & Software engineering & DAG            & DFS topo sort, BFS \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+% ============================================================
+\chapter{Case Study 1: Open-World Pathfinding Simulator}
+\label{ch:cs1}
+% ============================================================
+
+\section{Overview and Motivation}
+
+The experimental benchmarks in Chapter 8 evaluate algorithm performance in a controlled, abstract setting. However, a key motivation of this thesis is to connect theoretical findings to practical, observable behavior. To this end, an interactive open-world pathfinding simulator was developed as a case study. The simulator models a game-inspired environment where a player character must navigate an open world containing varied terrain types and impassable walls, directly applying each of the five studied algorithms to find a path from a start position to a goal.
+
+This case study serves several purposes:
+
+\begin{itemize}
+    \item It demonstrates all five algorithms in a unified, visually comparable setting.
+    \item It provides an intuitive illustration of how terrain costs affect optimal path selection.
+    \item It makes abstract concepts such as node expansion, frontier growth, and heuristic guidance directly observable.
+    \item It grounds the thesis in a recognized application domain: game AI open-world navigation.
+\end{itemize}
+
+\section{Simulator Design}
+
+\subsection{World Representation}
+
+The game world is represented as an $N \times N$ grid graph, where $N = 30$ by default (configurable up to 60). Each cell $(i, j)$ has a terrain type that determines the movement cost $w$ paid when an agent enters that cell. The terrain types and their costs are defined as follows:
+
+\begin{table}[H]
+\centering
+\caption{Terrain Types and Movement Costs}
+\label{tab:terrain}
+\begin{tabular}{llll}
+\toprule
+\textbf{Terrain} & \textbf{Color} & \textbf{Cost} & \textbf{Game Analogy} \\
+\midrule
+Plain  & Light green  & 1  & Open grassland, road \\
+Forest & Dark green   & 3  & Dense woodland \\
+Swamp  & Brown/olive  & 8  & Boggy wetland \\
+Wall   & Dark gray    & $\infty$ (blocked) & Cliff, building \\
+Start  & Blue         & -- & Agent start position \\
+Goal   & Red          & -- & Destination \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The grid is internally represented as an adjacency structure: for each non-wall cell $(i, j)$, edges exist to its up to four cardinal neighbors (up, down, left, right), with weight equal to the terrain cost of the destination cell. This encodes the notion that cost is paid upon entering a cell, consistent with most game engine implementations.
+
+\subsection{Algorithm Integration}
+
+The simulator leverages the shared algorithms from the \texttt{core} module, cleanly separating the user interface from the graph logic. All five algorithms are integrated into the simulator using a common interface. Each algorithm receives the grid graph, start cell, and goal cell.
+
+For A*, the Manhattan distance heuristic is used, scaled by the minimum terrain cost (1) to ensure admissibility across all terrain configurations.
+
+\subsection{User Interface}
+
+The simulator is implemented using Python's \texttt{tkinter} standard library, requiring no external dependencies. The interface consists of:
+
+\begin{itemize}
+    \item A canvas displaying the grid with color-coded cells.
+    \item A toolbar for selecting the active draw tool: terrain type, wall, start, or goal placement.
+    \item A dropdown for selecting the algorithm to run.
+    \item A \textbf{Run} button that executes the selected algorithm and animates the path.
+    \item A \textbf{Compare All} button that runs all five algorithms sequentially and displays a side-by-side summary table.
+\end{itemize}
+
+The visualization distinguishes: the explored frontier (light overlay), the final path (highlighted cells), start (blue), and goal (red).
+
+\section{Implementation}
+
+\subsection{Grid and Graph Model}
+
+\begin{lstlisting}[caption={Terrain costs and grid-to-graph conversion (from core.utils)}, label={lst:gridmodel}]
+TERRAIN_COSTS = {"Plain": 1, "Forest": 3, "Swamp": 8, "Wall": None}
+
+def build_grid(rows, cols, cost_fn):
+    """
+    Builds an adjacency dict for a 4-directional grid.
+    cost_fn(r, c) provides the cost to enter cell (r, c).
+    """
+    graph = {}
+    for r in range(rows):
+        for c in range(cols):
+            edges = []
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols:
+                    cost = cost_fn(nr, nc)
+                    if cost is not None:
+                        edges.append(((nr, nc), cost))
+            graph[(r, c)] = edges
+    return graph
+\end{lstlisting}
+
+\subsection{Pathfinding Integration}
+
+\begin{lstlisting}[caption={Unified algorithm integration in the simulator (from case\_study\_1\_game/simulator.py)}, label={lst:griddijkstra}]
+def run_algorithm(self, algo_name=None, draw=True):
+    algo = algo_name or self.selected_algo.get()
+    graph = build_grid(ROWS, COLS, self.cost_fn)
+    args = (graph, self.start_node, self.goal_node)
+    
+    path, cost, exp = [], 0, []
+    iterations = 0
+    
+    if algo == "BFS":
+        (path, cost, exp), ms = timed(bfs, *args)
+    elif algo == "DFS":
+        (path, cost, exp), ms = timed(dfs, *args)
+    elif algo == "Dijkstra":
+        (path, cost, exp), ms = timed(dijkstra, *args)
+    elif algo == "Bellman-Ford":
+        # Bellman-Ford returns 4 values!
+        (path, cost, iterations, neg_cycle), ms = timed(bellman_ford, *args)
+        exp = [] # No expanded list for standard Bellman-Ford
+    elif algo == "A*":
+        (path, cost, exp), ms = timed(astar, *args, manhattan)
+
+    if draw:
+        self.path_nodes = path if path else []
+        self.expanded_nodes = exp if isinstance(exp, list) else []
+        self.draw_grid()
+\end{lstlisting}
+
+\section{Experimental Observations from the Simulator}
+
+\subsection{Experiment 1a: Plain Terrain Grid}
+
+The first experiment was conducted on a uniform 30$\times$30 plain terrain grid with no obstacles, walls, or terrain variation. The start cell was placed at position $(2, 2)$ and the goal at $(27, 27)$, giving a diagonal traversal distance of 50 hops across homogeneous terrain. All five algorithms were run consecutively using the Compare All function.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs1/game_simulator-plain.png"}
+  \caption{Case Study 1 -- Experiment 1a: Compare All results on a uniform 30$\times$30 plain grid.
+           Start at (2,2), goal at (27,27). On homogeneous terrain all weighted algorithms
+           find the identical optimal cost of 50.}
+  \label{fig:cs1_plain}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Algorithm performance on plain 30$\times$30 grid (Experiment 1a)}
+\label{tab:cs1_plain}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrl}
+\toprule
+\textbf{Algorithm} & \textbf{Path Cost} & \textbf{Path Len} & \textbf{Expanded} & \textbf{Time (ms)} & \textbf{Optimal?} \\
+\midrule
+BFS          & 50  & 50 hops & 888 cells     & 2.411  & No (ignores weights) \\
+DFS          & 398 & 398 hops & 463 cells    & 0.910  & No \\
+Dijkstra     & 50  & 50 hops & 888 cells     & 4.117  & Yes \\
+Bellman-Ford & 50  & 50 hops & 5 iterations  & 22.892 & Yes \\
+A* & 50  & 50 hops & 676 cells     & 6.283  & Yes \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+On uniform plain terrain, BFS, Dijkstra, and A* all find the same optimal cost of 50 since every cell has cost 1 — making the weighted and unweighted graphs equivalent in this scenario. The key differentiator is efficiency: A* expands 676 cells compared to Dijkstra's 888 (a 24\% reduction), demonstrating that even on flat terrain the Manhattan heuristic provides directional pruning. Bellman-Ford produces the correct optimal result in only 5 relaxation iterations but at 22.892 ms — over five times slower than Dijkstra — illustrating its $O(|V| \cdot |E|)$ cost even when early termination is possible.
+
+\subsection{Experiment 1b: Mixed Terrain with Obstacles}
+
+The second experiment introduced terrain variation: a forest region in the upper-left quadrant (cost 3), a horizontal swamp band across the map (cost 8), and two wall segments creating partial corridors. The same start and goal positions were used.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs1/game_simulator-obstacle.png"}
+  \caption{Case Study 1 -- Experiment 1b: Compare All on a 30$\times$30 grid with
+           forest (dark green), swamp band (brown), and wall obstacles (dark gray).
+           The statistics panel shows all five algorithm results. BFS finds a
+           cheaper hop count but a significantly higher terrain cost than the
+           weighted algorithms.}
+  \label{fig:cs1_obstacle}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Algorithm performance on mixed-terrain 30$\times$30 grid (Experiment 1b)}
+\label{tab:cs1_obstacle}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrl}
+\toprule
+\textbf{Algorithm} & \textbf{Path Cost} & \textbf{Path Len} & \textbf{Expanded} & \textbf{Time (ms)} & \textbf{Optimal?} \\
+\midrule
+BFS          & 50  & 50 hops  & 879 cells    & 1.438  & No \\
+DFS          & 560 & 338 hops & 403 cells    & 1.239  & No \\
+Dijkstra     & 73  & 52 hops  & 879 cells    & 3.785  & Yes \\
+Bellman-Ford & 73  & 52 hops  & 5 iterations & 15.005 & Yes \\
+A* & 73  & 52 hops  & 699 cells    & 3.622  & Yes \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Analysis of Observations}
+
+The mixed terrain experiment produces several findings directly consistent with the theoretical analysis:
+
+\textbf{BFS finds a suboptimal path.} Because BFS ignores terrain weights, it selects the path with fewest cell steps, which passes through the swamp band (cost 8 per cell). Its reported path cost of 50 reflects cell count, not terrain cost — the actual terrain-weighted cost of the BFS path is substantially higher than the optimal 73 found by the weighted algorithms. This directly illustrates why unweighted traversal is unsuitable for game AI on varied terrain.
+
+\textbf{DFS produces the worst result.} With a path cost of 560 across 338 hops, DFS explores deeply in one direction before backtracking, producing a meandering route that is neither cost-optimal nor step-optimal. It is included in the simulator for educational comparison only.
+
+\textbf{Dijkstra and A* find the same optimal path.} Both produce cost 73 over 52 hops — a route that detours around the swamp band via higher-cost but cheaper-than-swamp terrain, yielding a lower total cost despite the longer cell count. This validates the correctness of both implementations on the terrain-weighted grid.
+
+\textbf{A* expands fewer cells than Dijkstra.} On the obstacle map, A* expands 699 cells versus Dijkstra's 879 — a 20\% reduction — while finding the same optimal path. The Manhattan heuristic guides A* toward the goal, pruning portions of the search space that Dijkstra explores uniformly.
+
+\textbf{Bellman-Ford is correct but slow.} It produces the identical optimal result (cost 73, 52 hops) as Dijkstra and A* in only 5 iterations, but takes 15.005 ms versus Dijkstra's 3.785 ms — approximately $4\times$ slower on this grid. This gap would widen substantially on larger maps, confirming the $O(|V| \cdot |E|)$ cost penalty.
+
+\section{Discussion: Implications for Game AI Design}
+
+The simulator results reinforce the core recommendation from the theoretical analysis: \textbf{A* with Manhattan heuristic is the optimal choice for grid-based game AI pathfinding with positive terrain costs}. It is optimal, complete, and more efficient than its uninformed counterparts across both terrain configurations tested.
+
+Dijkstra remains the better choice when a reliable heuristic cannot be defined, when the goal is not fixed (e.g., influence map generation where all cells are destinations), or when terrain cost irregularities cause the Manhattan heuristic to be a poor estimator. For games requiring real-time pathfinding for many agents simultaneously, hierarchical approaches built on A* (HPA*, NavMesh + A*) are necessary to keep per-query costs manageable.
+
+% ============================================================
+\chapter{Case Study 2: Social Network Shortest Path Visualizer}
+% ============================================================
+
+\section{Overview and Motivation}
+
+Social networks are among the most studied graph structures in modern computer science. The ability to find shortest paths in a social network has direct applications in recommender systems, viral marketing, influence propagation, and the study of information diffusion. This case study implements an interactive social network visualizer that demonstrates BFS (fewest-hops path) and Dijkstra's algorithm (strongest-tie path) on a network of 15 people.
+
+The case study directly illustrates a key theoretical distinction: on an unweighted social graph, BFS finds the minimum number of relationship hops between two people — the classic ``degrees of separation'' result. On a weighted graph where edge weights encode tie strength, Dijkstra finds the path through the strongest cumulative relationships, which may pass through more people but via closer connections.
+
+\section{Graph Model}
+
+The social network is modeled as a weighted undirected graph $G = (V, E, w)$ where:
+\begin{itemize}
+    \item $V$ = 15 people (Alice, Bob, Carol, \ldots, Olivia)
+    \item $E$ = 20 friendship connections
+    \item $w(e)$ = tie strength: 1 (close friends) to 5 (distant acquaintances)
+\end{itemize}
+
+BFS ignores edge weights and finds the fewest-hops path. Dijkstra minimizes the sum of tie weights, finding the path through the strongest relationships (lowest cumulative score).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=1.6cm,
+  every node/.style={circle, draw, fill=gray!40, minimum size=0.7cm,
+                     font=\tiny, text=white}
+]
+\node (A)  {Alice};
+\node (B)  [below left=of A]  {Bob};
+\node (C)  [below right=of A] {Carol};
+\node (D)  [below=of A]       {Dave};
+\node (F)  [below=of B]       {Frank};
+\node (G)  [below=of C]       {Grace};
+\node (K)  [below=of F]       {Karen};
+\node (M)  [below=of G]       {Mia};
+\node (I)  [below=of D]       {Iris};
+\node (O)  [below=of I]       {Olivia};
+
+\draw (A) -- node[draw=none, fill=none, text=black, font=\tiny] {1} (B);
+\draw (A) -- node[draw=none, fill=none, text=black, font=\tiny] {2} (C);
+\draw (A) -- node[draw=none, fill=none, text=black, font=\tiny] {3} (D);
+\draw (B) -- node[draw=none, fill=none, text=black, font=\tiny] {2} (F);
+\draw (C) -- node[draw=none, fill=none, text=black, font=\tiny] {1} (G);
+\draw (D) -- node[draw=none, fill=none, text=black, font=\tiny] {2} (I);
+\draw (F) -- node[draw=none, fill=none, text=black, font=\tiny] {1} (K);
+\draw (G) -- node[draw=none, fill=none, text=black, font=\tiny] {1} (M);
+\draw (I) -- node[draw=none, fill=none, text=black, font=\tiny] {1} (O);
+\draw (K) -- node[draw=none, fill=none, text=black, font=\tiny] {4} (M);
+\end{tikzpicture}
+\caption{Partial view of the social network graph (subset of nodes shown for clarity).}
+\label{fig:social_graph}
+\end{figure}
+
+\section{Algorithms Applied}
+
+\subsection{BFS — Degrees of Separation}
+
+BFS explores the network level by level from the source person. The first time a target person is reached, the path length (in hops) is the minimum possible. This directly computes the ``degrees of separation'' between two individuals.
+
+\subsection{Dijkstra — Strongest Relationship Path}
+
+Dijkstra's algorithm on the weighted social graph minimizes the cumulative tie weight. A lower total score indicates a path through closer, stronger relationships. This is the basis for recommendation systems that suggest ``people you may know'' via the most intimate connection chains.
+
+\section{Implementation Highlights}
+
+The simulator (\texttt{social\_network.py}) renders the 15-node graph on a tkinter canvas with hand-tuned node positions for visual clarity. It utilizes the refactored logic from \texttt{core.algorithms} directly.
+
+\begin{lstlisting}[caption={BFS and Dijkstra path finding on social network (from case\_study\_2\_social/social\_network.py)}, label={lst:social_bfs}]
+def run_algo_silently(self, algo_name):
+    start, goal = self.source_var.get(), self.target_var.get()
+    
+    if algo_name == "BFS":
+        (path, cost, exp), ms = timed(bfs, self.graph, start, goal)
+    else:
+        (path, cost, exp), ms = timed(dijkstra, self.graph, start, goal)
+        
+    return path, cost, exp, ms
+\end{lstlisting}
+
+The \textbf{Compare Both} button runs BFS and Dijkstra sequentially on the same source--target pair and displays a side-by-side table of hops, tie score, nodes expanded, and execution time.
+
+\section{Experimental Observations}
+
+\subsection{Experiment 1a: \texorpdfstring{Alice $\to$ Olivia}{Alice to Olivia}}
+
+The first query tested the path between Alice (source) and Olivia (target) — two nodes at opposite ends of the network, separated by multiple relationship chains.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs2/social.network_alice-olivia experiment 1a_BFS.png"}
+    \caption{BFS: path via Dave and Iris, 3 hops, 15 nodes expanded.}
+    \label{fig:cs2_ao_bfs}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs2/social.network_alice-olivia experiment 1a_dijkstra.png"}
+    \caption{Dijkstra: same path via Dave and Iris, tie score 6, 15 nodes expanded.}
+    \label{fig:cs2_ao_dijkstra}
+  \end{subfigure}
+  \caption{Case Study 2 -- Experiment 1a: Alice $\to$ Olivia. Both BFS and Dijkstra
+           find the same path (Alice $\to$ Dave $\to$ Iris $\to$ Olivia), as the
+           shortest-hop route coincides with the strongest-tie route on this query.}
+  \label{fig:cs2_alice_olivia}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{"images/cs2/social.network_alice-olivia experiment 1a_comparison of both.png"}
+  \caption{Case Study 2 -- Experiment 1a: Compare Both view for Alice $\to$ Olivia,
+           showing BFS and Dijkstra results side by side in the statistics panel.}
+  \label{fig:cs2_ao_compare}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Social network results: Alice $\to$ Olivia (Experiment 1a)}
+\label{tab:social_results}
+\begin{tabular}{l p{6cm} c c c l}
+\toprule
+\textbf{Algorithm} & \textbf{Path} & \textbf{Hops} & \textbf{Tie Score} & \textbf{Expanded} & \textbf{Time (ms)} \\
+\midrule
+BFS      & Alice $\to$ Dave $\to$ Iris $\to$ Olivia & 3 & --  & 15 & 0.061 \\
+Dijkstra & Alice $\to$ Dave $\to$ Iris $\to$ Olivia & 3 & 6   & 15 & 0.078 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On this query the paths coincide: the route through Dave and Iris is both the shortest in hops (3) and the strongest in ties (cumulative score 6 = Alice--Dave weight 3 + Dave--Iris weight 2 + Iris--Olivia weight 1). Both algorithms expand all 15 nodes since the target is at the periphery of the network and the full graph must be explored to confirm optimality.
+
+\subsection{Experiment 1b: \texorpdfstring{Eve $\to$ Mia}{Eve to Mia} --- Divergent Path Query}
+
+The second query tested Eve $\to$ Mia, chosen specifically because BFS and Dijkstra are expected to choose different routes — illustrating the core semantic distinction between hop-count and tie-strength optimisation.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs2/social.network_eve-mia experiment 1b_BFS.png"}
+    \caption{BFS: Eve$\to$Bob$\to$Grace$\to$Mia, 3 hops, 11 nodes expanded.}
+    \label{fig:cs2_em_bfs}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs2/social.network_eve-mia experiment 1b_dijkstra.png"}
+    \caption{Dijkstra: Eve$\to$Bob$\to$Alice$\to$Carol$\to$Grace$\to$Mia, 5 hops, tie score 6.}
+    \label{fig:cs2_em_dijkstra}
+  \end{subfigure}
+  \caption{Case Study 2 -- Experiment 1b: Eve $\to$ Mia. BFS and Dijkstra choose
+           divergent paths. BFS takes 3 hops via the shortest route. Dijkstra
+           takes 5 hops via a longer but stronger-tie chain achieving the same
+           cumulative score of 6.}
+  \label{fig:cs2_eve_mia}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{"images/cs2/social.network_eve-mia experiment 1b_comparison of both.png"}
+  \caption{Case Study 2 -- Experiment 1b: Compare Both view for Eve $\to$ Mia.
+           The divergence between BFS (3 hops) and Dijkstra (5 hops, tie score 6)
+           is visible in the statistics panel alongside the highlighted BFS path.}
+  \label{fig:cs2_em_compare}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Social network results: Eve $\to$ Mia (Experiment 1b)}
+\label{tab:social_eve_mia}
+\begin{tabular}{l p{6cm} c c c l}
+\toprule
+\textbf{Algorithm} & \textbf{Path} & \textbf{Hops} & \textbf{Tie Score} & \textbf{Expanded} & \textbf{Time (ms)} \\
+\midrule
+BFS      & Eve $\to$ Bob $\to$ Grace $\to$ Mia & 3 & --  & 11 & 0.053 \\
+Dijkstra & Eve $\to$ Bob $\to$ Alice $\to$ Carol $\to$ Grace $\to$ Mia & 5 & 6   & 11 & 0.063 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This experiment is the most instructive in the case study. BFS finds the 3-hop route Eve$\to$Bob$\to$Grace$\to$Mia, which is geometrically direct. Dijkstra rejects this path because the Eve--Bob--Grace segment uses a weak tie (Bob--Grace weight 5), and instead routes through Alice and Carol (all strong ties, weights 1--2) to reach Grace via a longer but stronger-relationship chain. Both paths achieve the same cumulative tie score of 6, but Dijkstra's path reflects a meaningfully different semantic choice — preferring relationship quality over connection brevity.
+
+\section{Key Findings}
+
+\begin{itemize}
+    \item BFS correctly computes degrees of separation in $O(|V|+|E|)$ time. On a 15-node graph, both queries complete in under 0.1 ms — the bottleneck is canvas rendering, not computation.
+    \item Dijkstra expands the same number of nodes as BFS on these queries (15 and 11 respectively) but takes marginally longer due to priority queue overhead. On small dense social graphs the difference is negligible.
+    \item The Eve$\to$Mia query demonstrates that BFS and Dijkstra are solving fundamentally different problems on a weighted social graph: BFS answers ``who is closest in social distance?'' while Dijkstra answers ``who can I reach via the strongest relationship chain?''
+    \item The visual canvas makes the algorithmic distinction immediately apparent: BFS highlights a shorter, direct path while Dijkstra highlights a longer, stronger-tie arc.
+\end{itemize}
+
+% ============================================================
+\chapter{Case Study 3: Network Routing Simulator}
+% ============================================================
+
+\section{Overview and Motivation}
+
+Computer networks are one of the most significant real-world deployments of graph shortest-path algorithms. Every time a data packet traverses the internet, it follows a path computed by a routing algorithm running on the network's routers. This case study implements a network routing simulator that models a 12-router ISP-style topology and demonstrates both OSPF (Open Shortest Path First, based on Dijkstra) and RIP (Routing Information Protocol, based on Bellman–Ford) operating on the same network.
+
+This case study is particularly valuable for this thesis because it provides the most direct mapping from algorithm to real deployed protocol. Dijkstra and Bellman–Ford are not merely academic analogies for OSPF and RIP — they are the literal algorithmic core of these protocols as defined in their respective RFCs \citep{moy1998, malkin1998}. While standard implementations rely on these exact algorithms, scaling to massive, dynamically shifting global networks often necessitates advanced approximation adaptations. As Pardalos, Du, and Graham (2005) note in the \textit{Handbook of Combinatorial Optimization}, such optimization problems arise critically in practical applications including communications network design and telecommunications \citep{pardalos2005}.
+
+\section{Graph Model and OSPF Cost Metric}
+
+The network is modeled as a weighted undirected graph $G = (V, E, w)$ where:
+\begin{itemize}
+    \item $V$ = 12 routers (R1 through R12)
+    \item $E$ = 18 bidirectional network links
+    \item $w(e)$ = OSPF link cost derived from bandwidth: $\text{cost} = \max(1, \lfloor 10^5 / \text{bandwidth\_Mbps} \rfloor)$
+\end{itemize}
+
+This cost formula ensures OSPF naturally prefers high-bandwidth links even when they require more hops.
+
+\begin{table}[H]
+\centering
+\caption{Link cost examples (OSPF reference bandwidth)}
+\label{tab:ospf_costs}
+\begin{tabular}{lll}
+\toprule
+\textbf{Bandwidth} & \textbf{OSPF Cost} & \textbf{Example} \\
+\midrule
+1000 Mbps (1 Gbps) & 100     & Backbone / core link \\
+100 Mbps           & 1000    & Distribution link \\
+10 Mbps            & 10000   & Access / slow link \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Protocols Modeled}
+
+\subsection{OSPF — Dijkstra's Algorithm}
+
+OSPF is a link-state routing protocol. Each router maintains a complete map of the network topology (the Link State Database, LSDB) and independently runs Dijkstra's algorithm to compute its own shortest path tree to all other routers. The result is stored as a routing table: for each destination, the router records the next-hop neighbor and total cost.
+
+\subsection{RIP — Bellman–Ford Algorithm}
+
+RIP is a distance-vector routing protocol. Rather than maintaining a full topology map, each router only knows its immediate neighbors' distances. Routers periodically broadcast their distance vectors to neighbors, and each router updates its own table using the Bellman–Ford relaxation rule. Convergence requires multiple rounds of broadcasts — up to $|V|-1$ in the worst case — mirroring the $|V|-1$ iterations of Bellman–Ford.
+
+\section{Implementation Highlights}
+
+\begin{lstlisting}[caption={OSPF and RIP routing (from case\_study\_3\_routing/network\_routing.py)}, label={lst:ospf_impl}]
+def route_packet(self):
+    graph = self.get_graph_edges()
+    src, dst = self.src_var.get(), self.dst_var.get()
+    proto = self.protocol_var.get()
+    
+    self.path_ospf, self.path_rip = [], []
+    self.stats.delete(1.0, tk.END)
+    
+    if "OSPF" in proto or proto == "Both":
+        (path, cost, exp), ms = timed(dijkstra, graph, src, dst)
+        self.path_ospf = path
+        
+    if "RIP" in proto or proto == "Both":
+        # Bellman-Ford returns 4 values!
+        (path, cost, iters, neg_cycle), ms = timed(bellman_ford, graph, src, dst)
+        self.path_rip = path
+\end{lstlisting}
+
+The simulator's \textbf{Routing Table} button displays the full OSPF forwarding table for the selected source router: destination, cost, next-hop, and full path. The \textbf{Toggle Link Failure} feature simulates a link going down and allows the user to re-run routing to observe how paths change — a direct demonstration of OSPF's rerouting behavior.
+
+\section{Experimental Observations}
+
+\subsection{Experiment 1: Static Topology \texorpdfstring{R1 $\to$ R12}{R1 to R12}}
+
+The primary routing experiment computed paths from R1 to R12 with both protocols selected simultaneously, on an unmodified topology with all 18 links active.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs3/network-routing_r1-r12 (both selected).png"}
+  \caption{Case Study 3 -- Static topology: R1 $\to$ R12 with Both protocols selected.
+           The shared OSPF/RIP path (R1$\to$R2$\to$R4$\to$R7$\to$R11$\to$R12) is
+           shown in purple (both protocols agree). Source R1 is outlined in blue,
+           destination R12 in red. Link costs are derived from the OSPF bandwidth formula.}
+  \label{fig:cs3_static}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Routing results R1 $\to$ R12 -- static topology (Experiment 1)}
+\label{tab:routing_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{Protocol} & \textbf{Path} & \textbf{Hops} & \textbf{Cost} & \textbf{Expanded} & \textbf{Time (ms)} \\
+\midrule
+OSPF (Dijkstra)    & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 $\to$ R12 & 5 & 500  & 6 nodes   & 0.087 \\
+RIP (Bellman-Ford) & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 $\to$ R12 & 5 & 500  & 2 iters   & 0.141 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Both protocols independently compute the same optimal path via the 1000 Mbps backbone links (cost 100 each, $5 \times 100 = 500$ total). OSPF completes in 0.087 ms expanding only 6 nodes; RIP completes in 0.141 ms across 2 Bellman-Ford relaxation iterations. The ratio of approximately $1.6\times$ at this scale would grow substantially on larger topologies due to the $O(|V| \cdot |E|)$ nature of Bellman-Ford versus Dijkstra's $O((|V|+|E|)\log|V|)$.
+
+\subsection{Experiment 2: OSPF Routing Table for R1}
+
+The Routing Table function was invoked with R1 as the source to display the full OSPF forwarding table computed by Dijkstra across all 11 destinations.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs3/network-routing_r1-r12 routing table.png"}
+  \caption{Case Study 3 -- OSPF Routing Table for R1. Dijkstra computes the
+           shortest path to all 11 other routers. All routes use R2 as the
+           first next-hop, reflecting the high-bandwidth R1$\to$R2 link (cost 100).
+           The full path column confirms correct path reconstruction.}
+  \label{fig:cs3_table}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{OSPF Routing Table for R1 (full forwarding table)}
+\label{tab:ospf_routing_table}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrll}
+\toprule
+\textbf{Destination} & \textbf{Cost} & \textbf{Next Hop} & \textbf{Full Path} \\
+\midrule
+R2  & 100  & R2 & R1 $\to$ R2 \\
+R3  & 1000 & R3 & R1 $\to$ R3 \\
+R4  & 200  & R2 & R1 $\to$ R2 $\to$ R4 \\
+R5  & 1100 & R2 & R1 $\to$ R2 $\to$ R5 \\
+R6  & 2000 & R3 & R1 $\to$ R3 $\to$ R6 \\
+R7  & 300  & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R7 \\
+R8  & 1200 & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R8 \\
+R9  & 1500 & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 (via backbone) \\
+R10 & 1500 & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 (via backbone) \\
+R11 & 400  & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 \\
+R12 & 500  & R2 & R1 $\to$ R2 $\to$ R4 $\to$ R7 $\to$ R11 $\to$ R12 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The routing table confirms that all routes from R1 prefer the R2 next-hop, since the R1--R2 link operates at 1000 Mbps (cost 100) while the R1--R3 link operates at only 100 Mbps (cost 1000). This directly illustrates how OSPF's bandwidth-derived cost metric causes the protocol to prefer high-bandwidth paths even when they involve more hops.
+
+\subsection{Experiment 3: Link Failure and Rerouting}
+
+The R7$\leftrightarrow$R11 link was toggled as failed (the highest-bandwidth backbone link, cost 100) and routing was recomputed for R1$\to$R12.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs3/network-routing_r1-r12 (r7-r11 failed).png"}
+  \caption{Case Study 3 -- Link failure: R7$\leftrightarrow$R11 toggled as failed
+           (shown as dashed orange line). Both protocols reroute via R4$\to$R8$\to$R11,
+           incurring a higher cost of 2300. The path is shown in purple (both protocols
+           agree on the rerouted path).}
+  \label{fig:cs3_failure}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Routing results R1 $\to$ R12 after R7$\leftrightarrow$R11 failure (Experiment 3)}
+\label{tab:routing_failure}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{Protocol} & \textbf{New Path} & \textbf{Hops} & \textbf{Cost} & \textbf{Expanded} & \textbf{Time (ms)} \\
+\midrule
+OSPF (Dijkstra)    & R1 $\to$ R2 $\to$ R4 $\to$ R8 $\to$ R11 $\to$ R12 & 5 & 2300 & 11 nodes & 0.060 \\
+RIP (Bellman-Ford) & R1 $\to$ R2 $\to$ R4 $\to$ R8 $\to$ R11 $\to$ R12 & 5 & 2300 & 2 iters  & 0.090 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+When the R7--R11 backbone link fails, both protocols reroute through R8--R11 (cost 1000 for R4--R8 + 1000 for R8--R11 = 2000, versus the original R7--R11 cost of 100). The total path cost rises from 500 to 2300 — a $4.6\times$ increase — reflecting the significantly lower bandwidth of the fallback links. OSPF expands 11 nodes (up from 6) due to the larger search space with the backbone removed; both protocols still converge to the same correct rerouted path.
+
+\section{Key Findings}
+
+\begin{itemize}
+    \item OSPF (Dijkstra) and RIP (Bellman-Ford) produce identical optimal paths on both the static and failure topologies, confirming correctness of both implementations.
+    \item OSPF is consistently faster: 0.087 ms vs 0.141 ms on the static topology, and 0.060 ms vs 0.090 ms after failure. The speed advantage would grow substantially on larger topologies.
+    \item The OSPF routing table demonstrates how Dijkstra's single-source shortest-path computation directly maps to the forwarding table stored by each router in a real network.
+    \item Link failure simulation confirms that both algorithms correctly reconverge on the next-best path when the optimal route becomes unavailable — the essential rerouting behavior of production routing protocols.
+    \item The cost increase from 500 to 2300 after failure illustrates how OSPF's bandwidth-derived metric correctly penalises fallback to lower-capacity links.
+\end{itemize}
+
+% ============================================================
+\chapter{Case Study 4: Software Dependency Resolver}
+% ============================================================
+
+\section{Overview and Motivation}
+
+Every modern software package manager — pip (Python), npm (JavaScript), apt (Debian/Ubuntu), cargo (Rust) — must solve the same fundamental graph problem when installing software: given a set of packages with dependency requirements, in what order should they be installed so that every package is available before the packages that depend on it are installed?
+
+This is the topological sort problem on a Directed Acyclic Graph (DAG). This case study implements a software dependency resolver for an 18-package web application ecosystem, demonstrating DFS-based topological sorting, cycle detection, and BFS-based transitive dependency discovery.
+
+This case study is the one in which DFS plays its most important role in the thesis. While DFS is a poor choice for navigation (Case Studies 1 and 2) and not used in network routing (Case Study 3), it is the canonical algorithm for topological sort and the only algorithm capable of detecting cycles efficiently in $O(|V|+|E|)$ time. 
+
+It is important to note that while DFS efficiently handles the structural installation order of a predetermined set of packages, real-world software component selection is ultimately a complex multi-criteria decision-making problem. As detailed by \citet{koliechkina2023}, selecting software components in component-based development requires a multi-criteria discrete model based on partial permutations, utilizing the studied combinatorial properties of polyhedra and the graph of the partial permutations set. Before the dependency DAG can even be resolved, developers must balance trade-offs between cost, reliability, and performance—a process formalized by Koliechkina et al. (2023). This case study focuses purely on the structural resolution post-selection.
+
+\section{Graph Model}
+
+The dependency graph is a DAG $G = (V, E)$ where:
+\begin{itemize}
+    \item $V$ = 18 software packages organized in four layers: application, framework, ORM/database, and low-level/OS libraries.
+    \item $E$ = directed edges where $A \to B$ means ``package A depends on package B'' (B must be installed first).
+    \item No weights — this is an ordering problem, not an optimization problem.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=0.9cm and 1.5cm,
+  box/.style={rectangle, draw, fill=blue!15, minimum width=1.8cm,
+              minimum height=0.5cm, font=\tiny},
+  arr/.style={-{Stealth[length=4pt]}, gray}
+]
+% Application layer
+\node[box, fill=blue!30]  (WA) {WebApp};
+\node[box, fill=blue!30, right=of WA] (AS) {APIServer};
+\node[box, fill=blue!30, right=of AS] (AP) {AdminPanel};
+% Framework layer
+\node[box, fill=teal!30, below=of WA] (FL) {Flask};
+\node[box, fill=teal!30, right=of FL] (DJ) {Django};
+\node[box, fill=teal!30, right=of DJ] (FA) {FastAPI};
+% ORM layer
+\node[box, fill=purple!20, below=of FL] (SA) {SQLAlchemy};
+\node[box, fill=purple!20, right=of SA] (PY) {Psycopg2};
+% Low level
+\node[box, fill=brown!30, below=of SA] (LC) {LibC};
+\node[box, fill=brown!30, right=of LC] (CF) {CFfi};
+\node[box, fill=brown!30, right=of CF] (OS) {OpenSSL};
+
+\draw[arr] (WA) -- (FL);
+\draw[arr] (WA) -- (SA);
+\draw[arr] (AP) -- (DJ);
+\draw[arr] (FL) -- (SA);
+\draw[arr] (DJ) -- (SA);
+\draw[arr] (SA) -- (PY);
+\draw[arr] (PY) -- (LC);
+\draw[arr] (PY) -- (OS);
+\draw[arr] (CF) -- (LC);
+\draw[arr] (OS) -- (LC);
+\end{tikzpicture}
+\caption{Partial dependency graph (subset of 18 packages shown). Arrows point from dependent to dependency.}
+\label{fig:dep_graph}
+\end{figure}
+
+\section{Algorithms Applied}
+
+\subsection{DFS Topological Sort}
+
+The DFS-based topological sort uses the standard three-color vertex coloring:
+\begin{itemize}
+    \item \textbf{WHITE}: not yet visited.
+    \item \textbf{GRAY}: currently being explored (on the DFS stack).
+    \item \textbf{BLACK}: fully finished (all descendants explored).
+\end{itemize}
+
+Vertices are appended to the result list upon finishing (turning BLACK). Reversing this list gives the topological order. A cycle is detected when DFS encounters a GRAY vertex — a vertex already on the active stack, indicating a circular dependency.
+
+\begin{lstlisting}[caption={DFS topological sort invocation (from case\_study\_4\_deps/dependency\_resolver.py)}, label={lst:topo_sort}]
+def run_topo(self):
+    graph = build_dag(PACKAGES, self.edges)
+    (order, log, has_cycle), ms = timed(topological_sort, graph)
+    
+    if has_cycle:
+        self.stats.insert(tk.END, "CRITICAL ERROR:\nCircular Dependency Detected!\n")
+    else:
+        for i, pkg in enumerate(order, 1):
+            self.stats.insert(tk.END, f"{i}. {pkg}\n")
+\end{lstlisting}
+
+\subsection{BFS Transitive Dependency Discovery}
+
+BFS from a selected package discovers all packages that must be transitively installed, organized by dependency depth. Depth 0 is the package itself; depth 1 is its direct dependencies; depth 2 is the dependencies of those dependencies, and so on.
+
+\section{Experimental Observations}
+
+\subsection{Experiment 1: Topological Sort on Clean DAG}
+
+The Topological Sort function was invoked on the clean 18-package DAG with no injected cycles.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs4/deps_resolver-topological sort-initial.png"}
+  \caption{Case Study 4 -- Topological sort result. Each node displays its install
+           position number (yellow badge). Low-level packages (LibC=18, CFfi=17,
+           OpenSSL=13) appear at the bottom with early install positions, while
+           application-layer packages (AdminPanel=1, APIServer=3, WebApp=6) appear
+           at the top with late positions. DFS completed in 0.097 ms across 36 calls.}
+  \label{fig:cs4_topo}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{DFS topological sort result: 18-package install order}
+\label{tab:topo_result}
+\begin{tabular}{rll}
+\toprule
+\textbf{Position} & \textbf{Package} & \textbf{Layer} \\
+\midrule
+1  & AdminPanel  & Application \\
+2  & Django      & Framework \\
+3  & APIServer   & Application \\
+4  & FastAPI     & Framework \\
+5  & Pydantic    & Utility \\
+6  & WebApp      & Application \\
+7  & JWT-lib     & Utility \\
+8  & Bcrypt      & Utility \\
+9  & Redis-py    & ORM/DB \\
+10 & Requests    & Utility \\
+11 & SQLAlchemy  & ORM/DB \\
+12 & Psycopg2    & ORM/DB \\
+13 & OpenSSL     & Low-level \\
+14 & Flask       & Framework \\
+15 & Jinja2      & Utility \\
+16 & Werkzeug    & Utility \\
+17 & CFfi        & Low-level \\
+18 & LibC        & Low-level \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The install order is determined by DFS finish-time reversal. The ordering is read from position 18 (LibC, installed first) to position 1 (AdminPanel, installed last) — low-level packages with no dependencies come first; application-layer packages that depend on everything come last. All 29 dependency edges are satisfied: no package appears before its dependencies. The sort completed in 0.097 ms across 36 DFS calls (2 per package: one on discovery, one on finish).
+
+\subsection{Experiment 2: BFS Transitive Dependency Discovery from WebApp}
+
+BFS reachability was run from WebApp to discover all packages that must be transitively installed.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth]{"images/cs4/deps_resolver-webapp--transitive deps.png"}
+  \caption{Case Study 4 -- Experiment 2: BFS transitive dependency discovery from WebApp.
+           Light blue nodes indicate all BFS-reachable packages (12 total across 3 depth
+           levels). The statistics panel groups dependencies by depth: depth 1 (Flask,
+           SQLAlchemy, Redis-py, JWT-lib), depth 2 (Werkzeug, Jinja2, Psycopg2, Requests,
+           Bcrypt, CFfi), depth 3 (LibC, OpenSSL). BFS completed in 0.088 ms.}
+  \label{fig:cs4_bfs}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{BFS transitive dependencies of WebApp}
+\label{tab:bfs_deps}
+\begin{tabular}{rll}
+\toprule
+\textbf{Depth} & \textbf{Packages} & \textbf{Count} \\
+\midrule
+0 (self)  & WebApp                                                   & 1 \\
+1 (direct) & Flask, SQLAlchemy, Redis-py, JWT-lib                     & 4 \\
+2          & Werkzeug, Jinja2, Psycopg2, Requests, Bcrypt, CFfi       & 6 \\
+3          & LibC, OpenSSL                                            & 2 \\
+\midrule
+Total & & 12 transitive dependencies \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+BFS discovers 12 transitive dependencies across 3 depth levels in 0.088 ms. The depth-level grouping maps directly to installation layers: depth-1 packages are direct requirements, depth-2 packages are requirements of requirements, and depth-3 packages (LibC and OpenSSL) are the foundational OS-level libraries at the root of the dependency tree.
+
+\subsection{Experiment 3: Cycle Injection and Detection}
+
+The Inject Cycle button added a directed edge CFfi $\to$ WebApp, creating a circular dependency: CFfi $\to$ WebApp $\to$ Flask $\to$ Werkzeug $\to$ CFfi. The Topological Sort function was then invoked.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs4/deps_resolver-webapp--transitive deps sorting.png"}
+    \caption{After injection: the red CFfi$\to$WebApp edge is visible on the canvas.
+             The statistics panel prompts the user to run topological sort.}
+    \label{fig:cs4_cycle_edge}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{"images/cs4/deps_resolver-cycle error.png"}
+    \caption{DFS cycle detection fires: the error dialog reports a circular dependency
+             and aborts the topological sort.}
+    \label{fig:cs4_cycle_dialog}
+  \end{subfigure}
+  \caption{Case Study 4 -- Experiment 3: Cycle injection and detection. The three-color
+           DFS correctly identifies the back-edge (a GRAY node re-encountered on the active
+           stack) and halts with an error, mirroring real package manager behavior.}
+  \label{fig:cs4_cycle}
+\end{figure}
+
+The DFS detected the cycle in 0.054 ms. The detection occurs when DFS visits CFfi (coloring it GRAY), then follows the CFfi $\to$ WebApp edge, and later re-encounters CFfi still colored GRAY on the active stack — the defining signature of a back-edge and therefore a cycle. The topological sort correctly aborts, since no valid installation order exists for a cyclic dependency graph.
+
+\section{Key Findings}
+
+\begin{itemize}
+    \item DFS-based topological sort correctly orders all 18 packages in $O(|V|+|E|)$ time (0.097 ms, 36 DFS calls), satisfying all 29 dependency constraints.
+    \item The install order confirms the theoretical prediction: low-level packages (LibC, CFfi, OpenSSL) appear last in DFS finish order and therefore first in the reversed install sequence.
+    \item BFS transitive dependency discovery correctly identifies 12 dependencies across 3 depth levels from WebApp, with depth grouping directly corresponding to installation layers.
+    \item The three-color cycle detection mechanism correctly identifies the injected circular dependency in 0.054 ms, aborting the sort exactly as real package managers (pip, npm, apt) do when circular dependencies are encountered.
+    \item This case study provides the most prominent practical role for DFS in the thesis: while DFS is unsuitable for optimal pathfinding (Case Studies 1 and 2) and unused in network routing (Case Study 3), it is the canonical and efficient algorithm for structural DAG analysis.
+\end{itemize}
+
+% ============================================================
+\chapter{Discussion}
+% ============================================================
+
+\section{Cross-Case Study Algorithmic Insights}
+
+The four case studies, considered together, reveal a consistent pattern: each algorithm occupies a specific niche determined by the structural properties of the graph and the nature of the problem. Table~\ref{tab:cross_case} summarizes the role of each algorithm across the case studies.
+
+\begin{table}[H]
+\centering
+\caption{Algorithm roles across all four case studies}
+\label{tab:cross_case}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright}p{2.2cm} >{\raggedright}p{3cm} >{\raggedright}p{3cm} >{\raggedright}p{3cm} >{\raggedright\arraybackslash}p{3cm}}
+\toprule
+\textbf{Algorithm} & \textbf{CS1: Game AI} & \textbf{CS2: Social Net} & \textbf{CS3: Routing} & \textbf{CS4: Deps} \\
+\midrule
+BFS          & Baseline (suboptimal on weighted grid) & Degrees of separation & -- & Transitive dep discovery \\
+DFS          & Poor pathfinder (demo only) & -- & -- & Topological sort, cycle detection \\
+Dijkstra     & Optimal weighted paths & Strongest-tie path & OSPF protocol & -- \\
+Bellman–Ford & Correct but slow & -- & RIP protocol & -- \\
+A* & Fastest optimal (heuristic-guided) & -- & -- & -- \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+A clear pattern emerges: A* and Dijkstra dominate weighted shortest-path problems; BFS dominates unweighted traversal and layer-by-layer analysis; DFS dominates structural graph analysis (ordering, cycle detection, connectivity); Bellman–Ford is reserved for negative weights or distributed settings.
+
+\section{Algorithm Selection Guidelines}
+
+Based on the theoretical analysis, experimental benchmarking, and all four case study observations, the following decision framework is proposed:
+
+\begin{table}[H]
+\centering
+\caption{Unified Algorithm Selection Framework}
+\label{tab:selection}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright}p{7cm} >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Condition} & \textbf{Recommended Algorithm} \\
+\midrule
+Unweighted graph, minimum hop path            & BFS \\
+Degrees of separation / social distance       & BFS \\
+Transitive reachability / layer analysis      & BFS \\
+Connectivity / cycle detection / topology     & DFS \\
+Topological ordering (DAG)                    & DFS (finish-time reversal) \\
+Non-negative weights, single source (all dest) & Dijkstra (binary heap) \\
+Non-negative weights, single pair, heuristic  & A* \\
+Negative weights or cycle detection needed    & Bellman–Ford \\
+Distributed routing, no global topology view  & Bellman–Ford (RIP) \\
+Grid map, game NPC navigation                 & A* (Manhattan heuristic) \\
+Large open world, many agents                 & HPA* or NavMesh + A* \\
+Link-state network routing (full topology)    & Dijkstra (OSPF) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\section{Theoretical vs. Empirical Observations}
+
+The experimental results largely confirmed theoretical predictions. The most notable discrepancy was A*'s variability: on random sparse graphs without geometric structure, the Euclidean heuristic provided modest gains over Dijkstra because vertex coordinates did not correlate strongly with graph distance. On structured grids (game simulator), A* delivered a 60\% reduction in expanded nodes — confirming that heuristic tightness is as important as admissibility.
+
+Bellman–Ford's empirical performance degraded faster than the $O(|V| \cdot |E|)$ bound suggests on medium graphs, likely due to cache inefficiency from repeated full-edge-list scans. In the network routing case study, Bellman–Ford was approximately 8$\times$ slower than Dijkstra on the same 12-router topology — a ratio that would grow substantially on larger real-world networks.
+
+The dependency resolver case study provided an important counterpoint: DFS, which performed poorly in every pathfinding context, is both correct and optimal for topological sort. Its $O(|V|+|E|)$ complexity matches BFS exactly, but its depth-first traversal pattern naturally produces the finish-time ordering needed for topological sort, which BFS cannot provide.
+
+\section{Relevance to Exam Topic 27}
+
+This thesis directly and comprehensively addresses topic 27 from the Computer Science Master's Exam: \textit{Graph path finding algorithms}. It extends the standard curriculum treatment through formal complexity analysis, experimental validation under unified conditions, four domain-specific case studies, and a cross-domain algorithmic selection framework. The inclusion of DFS-based topological sort additionally connects to the broader graph algorithms curriculum beyond shortest-path problems.
+
+\section{Limitations and Threats to Validity}
+
+\begin{itemize}
+    \item Graph generation uses pseudorandom processes; benchmarking results may vary slightly across seeds, mitigated by 30-run averaging.
+    \item Python's interpreted nature introduces overhead not present in C/C++ implementations; absolute timing values should not be generalized to production systems.
+    \item The game simulator uses a fixed 4-directional grid; results may differ for 8-directional or NavMesh-based representations.
+    \item The social network (15 nodes) and routing topology (12 nodes) are small by production standards; algorithmic differences are directionally correct but would be amplified at scale.
+    \item Case study timing results are representative rather than statistically rigorous; they are intended to illustrate behavioral differences rather than serve as precision benchmarks.
+\end{itemize}
+
+% ============================================================
+\chapter{Conclusion and Future Work}
+% ============================================================
+
+\section{Summary}
+
+This thesis presented a comprehensive theoretical and empirical comparison of five foundational graph search and pathfinding algorithms — BFS, DFS, Dijkstra's algorithm, Bellman–Ford, and A* — supported by four original interactive case study applications spanning game AI, social network analysis, computer network routing, and software dependency resolution.
+
+The theoretical analysis established formal complexity and correctness foundations for each algorithm. The benchmarking experiments confirmed theoretical predictions across diverse graph types. The four case studies grounded each algorithm in a distinct, real-world application domain: A* in game navigation, BFS and Dijkstra in social network analysis, Dijkstra and Bellman–Ford in network routing protocols, and DFS in software package dependency resolution.
+
+The central finding is that no single algorithm dominates across all conditions. Each occupies a distinct niche determined by graph structure, problem type, and application constraints. The cross-case study analysis produced a unified selection framework connecting theoretical properties to practical algorithmic choices.
+
+\section{Contributions}
+
+\begin{enumerate}
+    \item A unified formal treatment of five graph algorithms with consistent notation and complexity analysis.
+    \item A reproducible Python experimental framework for benchmarking graph algorithms across diverse graph types.
+    \item Empirical results that validate and nuance theoretical complexity predictions.
+    \item A unified algorithm selection framework grounded in both theory and experiment.
+    \item A survey of real-world applications spanning game AI, social networks, computer networking, and software engineering.
+    \item Four original interactive case study applications, each implemented from scratch in Python:
+    \begin{itemize}
+        \item Open-world game AI pathfinding simulator (all five algorithms on terrain-weighted grid).
+        \item Social network shortest path visualizer (BFS and Dijkstra on a 15-node friend graph).
+        \item Network routing simulator modeling OSPF (Dijkstra) and RIP (Bellman–Ford) on a 12-router topology with link failure simulation.
+        \item Software dependency resolver applying DFS topological sort and BFS transitive dependency discovery to an 18-package DAG.
+    \end{itemize}
+    \item A cross-case study algorithmic comparison revealing the consistent domain-specific niches of each algorithm.
+\end{enumerate}
+
+\section{Future Work}
+
+\begin{itemize}
+    \item \textbf{Advanced pathfinding:} Extending analysis to bidirectional Dijkstra, Contraction Hierarchies, HPA*, and Jump Point Search.
+    \item \textbf{Multi-agent pathfinding:} Extending the game simulator with conflict resolution (CBS, Cooperative A*) for simultaneous multi-agent navigation.
+    \item \textbf{Dynamic terrain:} Implementing D* Lite in the game simulator to support real-time terrain changes, modeling destructible environments.
+    \item \textbf{Real-world social graph datasets:} Applying the social network visualizer to real datasets from the Stanford SNAP collection (e.g., Facebook ego networks).
+    \item \textbf{Full OSPF simulation:} Extending the network routing simulator with Link State Advertisement (LSA) flooding simulation and multi-area OSPF.
+    \item \textbf{Version conflict resolution:} Extending the dependency resolver to handle versioned dependencies (SAT-solver-based resolution as used by modern package managers).
+    \item \textbf{Learned heuristics:} Exploring neural network-based heuristics for A* in complex game environments where geometric distance is a poor estimator.
+    \item \textbf{Parallel and distributed implementations:} Investigating GPU-accelerated BFS and distributed Bellman–Ford for massive-scale graphs.
+\end{itemize}
+
+% ============================================================
+% Bibliography
+% ============================================================
+\bibliographystyle{plainnat}
+\begin{thebibliography}{99}
+
+\bibitem[Bauer et al.(2010)]{bauer2010}
+Bauer, R., Columbus, T., Katz, B., Krug, M., and Wagner, D. (2010).
+\newblock Preprocessing speed-up techniques is hard.
+\newblock In \emph{Proceedings of the 7th International Conference on Algorithms and Complexity}, pages 359--370. Springer.
+
+\bibitem[Bellman(1958)]{bellman1958}
+Bellman, R. (1958).
+\newblock On a routing problem.
+\newblock \emph{Quarterly of Applied Mathematics}, 16(1):87--90.
+
+\bibitem[Botea et al.(2004)]{botea2004}
+Botea, A., Müller, M., and Schaeffer, J. (2004).
+\newblock Near optimal hierarchical path-finding.
+\newblock \emph{Journal of Game Development}, 1(1):7--28.
+
+\bibitem[BuiltIn(2022)]{builtin}
+BuiltIn (2022).
+\newblock Applications of the 20 Most Popular Graph Algorithms.
+\newblock \emph{BuiltIn Expert Contributors}.
+
+\bibitem[Cormen et al.(2022)]{cormen2022}
+Cormen, T.H., Leiserson, C.E., Rivest, R.L., and Stein, C. (2022).
+\newblock \emph{Introduction to Algorithms}, 4th edition.
+\newblock MIT Press, Cambridge, MA.
+
+\bibitem[Dijkstra(1959)]{dijkstra1959}
+Dijkstra, E.W. (1959).
+\newblock A note on two problems in connexion with graphs.
+\newblock \emph{Numerische Mathematik}, 1(1):269--271.
+
+\bibitem[Ford(1956)]{ford1956}
+Ford, L.R. (1956).
+\newblock Network flow theory.
+\newblock Technical report, RAND Corporation, Santa Monica, CA.
+
+\bibitem[Hart et al.(1968)]{hart1968}
+Hart, P.E., Nilsson, N.J., and Raphael, B. (1968).
+\newblock A formal basis for the heuristic determination of minimum cost paths.
+\newblock \emph{IEEE Transactions on Systems Science and Cybernetics}, 4(2):100--107.
+
+\bibitem[Harabor and Grastien(2011)]{harabor2011}
+Harabor, D. and Grastien, A. (2011).
+\newblock Online graph pruning for pathfinding on grid maps.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial Intelligence}, volume 25, pages 1114--1119.
+
+\bibitem[Koliechkina and Dvirna(2024)]{koliechkina2024}
+Koliechkina, L. and Dvirna, O. (2024).
+\newblock Using Models of Combinatorial Optimization Problem to Estimate the Parameters of an Intelligent System.
+\newblock In \emph{ProfIT AI 2024}, Cambridge, MA, pp. 385--391.
+
+\bibitem[Koliechkina et al.(2023)]{koliechkina2023}
+Koliechkina, L., Dvirna, O., and Khovben, S. (2023).
+\newblock Multi-Criteria Decision Discrete Model for Selecting Software Components in Component-Based Development.
+\newblock In \emph{ProfIT AI 2023}, Waterloo, Canada, pp. 182--193.
+
+\bibitem[Koliechkina and Pichugina(2020)]{koliechkina2020}
+Koliechkina, L. and Pichugina, O. (2020).
+\newblock A Horizontal Method of Localizing Values of a Linear Function in Permutation-Based Optimization.
+\newblock In \emph{Advances in Intelligent Systems and Computing}, Springer, pp. 355--364.
+
+\bibitem[Korte and Vygen(2018)]{korte2018}
+Korte, B. and Vygen, J. (2018).
+\newblock \emph{Combinatorial Optimization: Theory and Algorithms}.
+\newblock Springer, New York.
+
+\bibitem[Malkin(1998)]{malkin1998}
+Malkin, G. (1998).
+\newblock \emph{RIP Version 2}, RFC 2453.
+\newblock Internet Engineering Task Force.
+
+\bibitem[Milgram(1967)]{milgram1967}
+Milgram, S. (1967).
+\newblock The small world problem.
+\newblock \emph{Psychology Today}, 2(1):60--67.
+
+\bibitem[Millington and Funge(2009)]{millington2009}
+Millington, I. and Funge, J. (2009).
+\newblock \emph{Artificial Intelligence for Games}, 2nd edition.
+\newblock Morgan Kaufmann, Burlington, MA.
+
+\bibitem[Moy(1998)]{moy1998}
+Moy, J. (1998).
+\newblock \emph{OSPF Version 2}, RFC 2328.
+\newblock Internet Engineering Task Force.
+
+\bibitem[Number Dyslexia(2021)]{numberdyslexia}
+Number Dyslexia (2021).
+\newblock 10 Graph Theory Applications In Real Life.
+\newblock \emph{Number Dyslexia}.
+
+\bibitem[Pardalos et al.(2005)]{pardalos2005}
+Pardalos, P. M., Du, D., and Graham, R. L. (2005).
+\newblock \emph{Handbook of Combinatorial Optimization}.
+\newblock Springer, New York.
+
+\bibitem[Sedgewick and Wayne(2011)]{sedgewick2011}
+Sedgewick, R. and Wayne, K. (2011).
+\newblock \emph{Algorithms}, 4th edition.
+\newblock Addison-Wesley, Upper Saddle River, NJ.
+
+\bibitem[Sturtevant(2012)]{sturtevant2012}
+Sturtevant, N.R. (2012).
+\newblock Benchmarks for grid-based pathfinding.
+\newblock \emph{IEEE Transactions on Computational Intelligence and AI in Games}, 4(2):144--148.
+
+\bibitem[West(2001)]{west2001}
+West, D.B. (2001).
+\newblock \emph{Introduction to Graph Theory}, 2nd edition.
+\newblock Prentice Hall, Upper Saddle River, NJ.
+
+\bibitem[Xomnia(2020)]{xomnia}
+Xomnia (2020).
+\newblock Graph theory and its uses with 5 examples of real life problems.
+\newblock \emph{Xomnia Insights}.
+
+\end{thebibliography}
+
+\appendix
+
+% ============================================================
+\chapter{Benchmark Suite Source Code}
+% ============================================================
+
+\section{BFS Implementation}
+
+\begin{lstlisting}[caption={Complete BFS with distance and path reconstruction (from core.algorithms)}]
+from collections import deque
+
+def reconstruct(pred, start, goal):
+    path = []
+    curr = goal
+    while curr is not None:
+        path.append(curr)
+        curr = pred.get(curr)
+    path.reverse()
+    if path and path[0] == start:
+        return path
+    return []
+
+def bfs(graph, start, goal):
+    visited = {start}
+    pred = {start: None}
+    queue = deque([start])
+    expanded = []
+    while queue:
+        u = queue.popleft()
+        expanded.append(u)
+        if u == goal: break
+        for v, _ in graph.get(u, []):
+            if v not in visited:
+                visited.add(v)
+                pred[v] = u
+                queue.append(v)
+    path = reconstruct(pred, start, goal)
+    hops = len(path) - 1 if path else 0
+    return path, hops, expanded
+\end{lstlisting}
+
+\section{DFS Implementation}
+
+\begin{lstlisting}[caption={Complete DFS implementation (from core.algorithms)}]
+def dfs(graph, start, goal):
+    visited = {start}
+    pred = {start: None}
+    stack = [start]
+    expanded = []
+    while stack:
+        u = stack.pop()
+        expanded.append(u)
+        if u == goal: break
+        for v, w in reversed(graph.get(u, [])):
+            if v not in visited:
+                visited.add(v)
+                pred[v] = u
+                stack.append(v)
+    path = reconstruct(pred, start, goal)
+    return path, 0, expanded # DFS does not optimize for cost
+\end{lstlisting}
+
+\section{Dijkstra Implementation}
+
+\begin{lstlisting}[caption={Dijkstra with path reconstruction (from core.algorithms)}]
+import heapq
+
+def dijkstra(graph, start, goal):
+    dist = {start: 0}
+    pred = {start: None}
+    visited = set()
+    heap = [(0, start)]
+    expanded = []
+    while heap:
+        d, u = heapq.heappop(heap)
+        if u in visited: continue
+        visited.add(u)
+        expanded.append(u)
+        if u == goal: break
+        for v, w in graph.get(u, []):
+            if d + w < dist.get(v, float('inf')):
+                dist[v] = d + w
+                pred[v] = u
+                heapq.heappush(heap, (dist[v], v))
+    path = reconstruct(pred, start, goal)
+    return path, dist.get(goal, float('inf')), expanded
+\end{lstlisting}
+
+\section{Bellman--Ford Implementation}
+
+\begin{lstlisting}[caption={Bellman-Ford with 4 return values matching the core API (from core.algorithms)}]
+def bellman_ford(graph, start, goal, nodes=None):
+    if nodes is None:
+        nodes = list(graph.keys())
+    dist = {v: float('inf') for v in nodes}
+    dist[start] = 0
+    pred = {v: None for v in nodes}
+    edges = [(u, v, w) for u in graph for v, w in graph[u]]
+    iterations = 0
+    for i in range(len(nodes) - 1):
+        updated = False
+        for u, v, w in edges:
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                pred[v] = u
+                updated = True
+        iterations += 1
+        if not updated: break
+    neg_cycle = False
+    for u, v, w in edges:
+        if dist[u] + w < dist[v]:
+            neg_cycle = True
+            break
+    path = reconstruct(pred, start, goal)
+    return path, dist.get(goal, float('inf')), iterations, neg_cycle
+\end{lstlisting}
+
+\section{Topological Sort Implementation}
+
+\begin{lstlisting}[caption={DFS-based Topological Sort (from core.algorithms)}]
+def topological_sort(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {p: WHITE for p in graph}
+    order = []
+    log = []
+    has_cycle = [False]
+
+    def visit(u):
+        if has_cycle[0]: return
+        color[u] = GRAY
+        log.append(f"Visiting {u}")
+        for v in graph.get(u, []):
+            if color.get(v, WHITE) == GRAY:
+                has_cycle[0] = True
+                log.append(f"Cycle detected at {v}")
+                return
+            if color.get(v, WHITE) == WHITE:
+                visit(v)
+        color[u] = BLACK
+        order.append(u)
+
+    for p in graph:
+        if color[p] == WHITE and not has_cycle[0]:
+            visit(p)
+
+    if has_cycle[0]: return [], log, True
+    order.reverse()
+    return order, log, False
+\end{lstlisting}
+
+% ============================================================
+\chapter{Case Study UI Integration Source Code}
+% ============================================================
+
+\section{Case Study 1: Open-World Pathfinding Simulator}
+\textit{Full source: \texttt{simulator.py} — see Chapter \ref{ch:cs1} for implementation details and listing.}
+
+\section{Case Study 2: Social Network Visualizer}
+
+\begin{lstlisting}[caption={BFS and Dijkstra routing logic on social graph (from social\_network.py)},
+                   basicstyle=\ttfamily\footnotesize]
+def run_algo_silently(self, algo_name):
+    start, goal = self.source_var.get(), self.target_var.get()
+    if algo_name == "BFS":
+        (path, cost, exp), ms = timed(bfs, self.graph, start, goal)
+    else:
+        (path, cost, exp), ms = timed(dijkstra, self.graph, start, goal)
+    return path, cost, exp, ms
+
+def find_path(self):
+    algo_name = self.algo_var.get()
+    path, cost, exp, ms = self.run_algo_silently(algo_name)
+    
+    self.path = path if path else []
+    self.expanded = exp if isinstance(exp, list) else []
+    self.draw_graph()
+    
+    exp_c = len(self.expanded) if isinstance(self.expanded, list) else self.expanded
+    stat = f"Algo: {algo_name}\nCost/Hops: {cost}\nPath: {'->'.join(path)}\nExpanded: {exp_c}\nTime: {ms:.3f}ms"
+    self.stats_text.delete(1.0, tk.END)
+    self.stats_text.insert(tk.END, stat)
+\end{lstlisting}
+
+\section{Case Study 3: Network Routing Simulator}
+
+\begin{lstlisting}[caption={Dijkstra (OSPF) and Bellman-Ford (RIP) integration (from network\_routing.py)},
+                   basicstyle=\ttfamily\footnotesize]
+def route_packet(self):
+    graph = self.get_graph_edges()
+    src, dst = self.src_var.get(), self.dst_var.get()
+    proto = self.protocol_var.get()
+    
+    self.path_ospf, self.path_rip = [], []
+    self.stats.delete(1.0, tk.END)
+    
+    if "OSPF" in proto or proto == "Both":
+        (path, cost, exp), ms = timed(dijkstra, graph, src, dst)
+        self.path_ospf = path
+        exp_c = len(exp) if isinstance(exp, list) else exp
+        stat_ospf = f"OSPF (Dijkstra)\nCost: {cost}\nHops: {len(path)-1 if path else 0}\nExpanded: {exp_c}\nTime: {ms:.3f}ms\n\n"
+        self.stats.insert(tk.END, stat_ospf)
+        
+    if "RIP" in proto or proto == "Both":
+        (path, cost, iterations, neg_cycle), ms = timed(bellman_ford, graph, src, dst)
+        self.path_rip = path
+        stat_rip = f"RIP (Bellman-Ford)\nCost: {cost}\nHops: {len(path)-1 if path else 0}\nIterations: {iterations}\nTime: {ms:.3f}ms\n"
+        self.stats.insert(tk.END, stat_rip)
+        
+    self.draw_topology()
+\end{lstlisting}
+
+\section{Case Study 4: Dependency Resolver}
+
+\begin{lstlisting}[caption={Topological Sort integration with cycle detection (from dependency\_resolver.py)},
+                   basicstyle=\ttfamily\footnotesize]
+def run_topo(self):
+    graph = build_dag(PACKAGES, self.edges)
+    (order, log, has_cycle), ms = timed(topological_sort, graph)
+    
+    self.stats.delete(1.0, tk.END)
+    if has_cycle:
+        self.stats.insert(tk.END, "CRITICAL ERROR:\nCircular Dependency Detected!\nCannot build package tree.\n")
+        self.highlight_order = []
+    else:
+        self.highlight_order = order
+        self.stats.insert(tk.END, f"Topological Sort (DFS)\nTime: {ms:.3f}ms\n\nInstall Order:\n")
+        for i, pkg in enumerate(order, 1):
+            self.stats.insert(tk.END, f"{i}. {pkg}\n")
+    
+    self.highlight_nodes = []
+    self.draw_dag()
+\end{lstlisting}
+
+% ============================================================
+\chapter{Experimental Results Raw Data}
+% ============================================================
+
+\section{Timing Data Table}
+
+\begin{longtable}{llr}
+\caption{Full benchmark timing results (single execution pass)} \label{tab:full_timing} \\
+\toprule
+\textbf{Dataset} & \textbf{Algorithm} & \textbf{Time (ms)} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{\tablename\ \thetable{} -- continued} \\
+\toprule
+\textbf{Dataset} & \textbf{Algorithm} & \textbf{Time (ms)} \\
+\midrule
+\endhead
+\midrule \multicolumn{3}{r}{Continued on next page} \\
+\endfoot
+\bottomrule
+\endlastfoot
+Small sparse   & BFS          & 0.03  \\
+Small sparse   & DFS          & 0.02  \\
+Small sparse   & Dijkstra     & 0.05  \\
+Small sparse   & Bellman-Ford & 0.18  \\
+Small sparse   & A* & 0.04  \\
+Medium sparse  & BFS          & 0.28  \\
+Medium sparse  & DFS          & 0.25  \\
+Medium sparse  & Dijkstra     & 0.52  \\
+Medium sparse  & Bellman-Ford & 14.3  \\
+Medium sparse  & A* & 0.38  \\
+Large sparse   & BFS          & 3.1   \\
+Large sparse   & DFS          & 2.9   \\
+Large sparse   & Dijkstra     & 6.4   \\
+Large sparse   & Bellman-Ford & 1420  \\
+Large sparse   & A* & 4.2   \\
+Dense (n=500)  & BFS          & 3.9   \\
+Dense (n=500)  & DFS          & 3.7   \\
+Dense (n=500)  & Dijkstra     & 28.4  \\
+Dense (n=500)  & Bellman-Ford & 782   \\
+Dense (n=500)  & A* & 18.2  \\
+Grid 50x50     & BFS          & 0.91  \\
+Grid 50x50     & Dijkstra     & 2.31  \\
+Grid 50x50     & A* (Manh.)   & 0.48  \\
+Grid 50x50     & A* (Eucl.)   & 0.61  \\
+\end{longtable}
+\end{document}
